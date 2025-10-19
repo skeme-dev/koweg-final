@@ -1,6 +1,6 @@
 # Node-Version passend zu deiner lokalen Umgebung
 # Verwende ein aktuelles Node-Image mit weniger bekannten Schwachstellen
-FROM node:20-alpine
+FROM node:22-alpine
 
 # Optional: Installiere zusätzliche Abhängigkeiten, falls benötigt
 # RUN apk add --no-cache ...
