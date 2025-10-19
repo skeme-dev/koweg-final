@@ -1,0 +1,7 @@
+# SvelteKit/Vite Output & Config
+.output/
+.svelte-kit/
+build/
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
+node_modules

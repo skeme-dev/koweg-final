@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--background-color: #ffffff; /* Light background */
+	--foreground-color: #000; /* Light text */
+	--background-color-muted: color-mix(
+		in srgb,
+		var(--background-color),
+		var(--foreground-color) 10%
+	);
+	--accent-color: #161a4e; /* Accent color */
+	--background-variant-color: #161a4e;
+	--accent-color-dark: color-mix(in srgb, var(--accent-color), black 40%);
+	--accent-color-soft: color-mix(in srgb, var(--accent-color), white 20%);
+	--accent-color-light: color-mix(in srgb, var(--accent-color), white 90%);
+	--input-color: color-mix(in srgb, var(--background-color), var(--foreground-color) 30%);
+}
+
+ /* .dark {
+	--background-color: #ffffff; 
+	--background-color-muted: color-mix(
+		in srgb,
+		var(--background-color),
+		var(--foreground-color) 10%
+	);
+	--background-variant-color: #172940;
+	--foreground-color: #000; 
+} */
+
+@layer base {
+	html {
+		@apply bg-[var(--background-color)] text-[var(--foreground-color)];
+	}
+}
+
+@layer components {
+	input:focus,
+	textarea:focus,
+	select:focus,
+	button:focus,
+	a:focus,
+	[role='button']:focus {
+		@apply outline-none;
+	}
+
+	[data-background='dark'] {
+		@apply bg-gray dark:bg-[var(--background-variant-color)];
+	}
+
+	:root:not(.dark) [data-background='dark'] {
+		.inline-flex[class*='bg-gray'] {
+			@apply bg-[#172940] text-white hover:bg-accent;
+		}
+	}
+}
+
+@layer utilities {
+	a {
+		@apply no-underline transition-colors hover:text-accent;
+	}
+}
