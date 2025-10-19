@@ -4,5 +4,8 @@ import { enhancedImages } from '@sveltejs/enhanced-img';
 
 
 export default defineConfig({
-	plugins: [enhancedImages(), sveltekit()]
+	plugins: [enhancedImages(), sveltekit()],
+	server: {
+			allowedHosts: ["koweg.clients.skeme.dev", "directus.skeme.dev"]
+	},
 });
