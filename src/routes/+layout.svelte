@@ -11,7 +11,7 @@
 	import HeroImage from '$lib/components/layout/HeroImage.svelte';
 	import Breadcrumb from '$lib/components/layout/PageBreadcrumb.svelte';
 	import PageBreadcrumb from '$lib/components/layout/PageBreadcrumb.svelte';
-	import { migrate } from '$lib/migrations';
+	
 
 	let { children, data } = $props();
 
