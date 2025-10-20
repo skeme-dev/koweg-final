@@ -46,7 +46,7 @@
 	{@html `<style>:root{ --accent-color: ${accentColor} !important }</style>`}
 </svelte:head>
 
-<ModeWatcher />
+
 <NavigationBar />
 <HeroImage image={page.data.hero_image} />
 <main class="flex-grow">
