@@ -331,8 +331,8 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 								'title',
 								{
 									page: ['permalink'],
-									children: ['id', 'title', 'url', { page: ['permalink'] }]
-								}
+									children: ['id', 'title', 'url', { page: ['permalink'], department: ["slug"] }]
+								},
 							]
 						}
 					],

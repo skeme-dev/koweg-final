@@ -21,6 +21,8 @@
 	const darkLogoUrl = $derived(
 		globals?.logo_dark_mode ? `${directusURL}/assets/${globals.logo_dark_mode}` : ''
 	);
+
+	console.log(navigation.items)
 </script>
 
 <header class="bg-background font-heading text-foreground sticky top-0 z-50 w-full">
@@ -58,7 +60,7 @@
 				{#each navigation?.items as item (item.id)}
 					{#if item.children.length === 0}
 						<Button
-							href={item.page.permalink}
+							href={item.page?.permalink}
 							variant="ghost"
 							class="!font-heading text-xl font-semibold uppercase !text-inherit
 ">{item.title}</Button
@@ -79,7 +81,7 @@
 									<DropdownMenu.Item class="!bg-transparent">
 										<a
 											class="hover:text-primary-500 text-lg w-full font-semibold"
-											href={child.page.permalink}>{child.title}</a
+											href={child.page.permalink || "/abteilungen/"+child.department?.slug}>{child.title}</a
 										>
 									</DropdownMenu.Item>
 								{/each}
@@ -111,7 +113,7 @@
 												{#if item.children.length === 0}
 													<DropdownMenu.Item class="!bg-transparent p-0 "
 														><a
-															href={item.page?.permalink || item.url || '#'}
+															href={item.page?.permalink || item.url || "/abteilungen/"+item.department?.slug || '#'}
 															class="font-heading text-nav w-full"
 														>
 															{item.title}</a
@@ -132,7 +134,7 @@
 																{#each item.children as child (child.id)}
 																	<a
 																		class="font-heading text-nav w-full"
-																		href={child.page?.permalink || child.url}>{child.title}</a
+																		href={child.page?.permalink || child.url || "/abteilungen/"+child.department?.slug}>{child.title}</a
 																	>
 																{/each}
 															</div>
