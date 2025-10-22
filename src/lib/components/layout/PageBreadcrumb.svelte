@@ -4,7 +4,6 @@
 
 	const pathname = $derived(page.url.pathname);
 
-	console.log(page.data);
 
 	function buildBreadcrumb() {
 		const path = pathname.replace(/\/+$/, '') || '/';
@@ -40,9 +39,10 @@
 
 	const breadcrumb = $derived.by(() => buildBreadcrumb());
 
-	console.log(breadcrumb);
-</script>
+	console.log('BREADCRUMB', page.data);
 
+</script>
+{#if page.data?.template != "landing_page" }
 <div class="max-w-7xl sm:px-6 lg:px-16 mx-auto flex mt-12 mb-6">
 
 	<div class="flex items-center justify-center space-x-6">
@@ -63,3 +63,4 @@
 		
 	</div>
 </div>
+{/if}

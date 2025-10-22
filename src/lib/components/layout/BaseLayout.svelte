@@ -30,5 +30,5 @@
         {@render children()}
     </SubPageLayout> 
 {:else}
-    <p>Unknown template</p>
+    <p>Achtung es wurde kein template ausgewählt.</p>
 {/if}

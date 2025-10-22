@@ -8,8 +8,6 @@
 
     let { sponsors } = $props();
     
-console.log(sponsors);
-
     const plugins = [Autoplay(), AutoScroll()]
     const options = {
         loop: true

@@ -359,6 +359,8 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 			)
 		]);
 
+		console.log(globals, headerNavigation, footerNavigation);
+
 		return { globals, headerNavigation, footerNavigation };
 	} catch (error) {
 		console.error('Error fetching site data:', error);

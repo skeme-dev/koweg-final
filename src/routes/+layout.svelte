@@ -11,7 +11,6 @@
 	import HeroImage from '$lib/components/layout/HeroImage.svelte';
 	import Breadcrumb from '$lib/components/layout/PageBreadcrumb.svelte';
 	import PageBreadcrumb from '$lib/components/layout/PageBreadcrumb.svelte';
-	
 
 	let { children, data } = $props();
 
@@ -36,7 +35,6 @@
 		});
 	});
 
-
 </script>
 
 <svelte:head>
@@ -50,8 +48,10 @@
 <NavigationBar />
 <HeroImage image={page.data.hero_image} />
 <main class="flex-grow">
-	<PageBreadcrumb />
-	
+	{#if page.data?.template != 'landing_page'}
+		<PageBreadcrumb />
+	{/if}
+
 	{@render children()}
 </main>
 <Footer />

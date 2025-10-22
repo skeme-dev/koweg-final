@@ -13,7 +13,9 @@
 		return page.data.departments.find((dept) => dept.slug === currentSlug);
 	});
 
-	const leader = $derived(department.leader);
+	console.log(department);
+
+	const leader = $derived(department?.leader ?? []);
 </script>
 
 <!-- {department.title} -->
