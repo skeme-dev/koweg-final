@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 
 	const navigation = $derived(page.data.headerNavigation);
-	console.log(navigation);
 	const otherSites = $derived.by(() => {
 		return findNavigationGroup() ?? [];
 	});
@@ -18,12 +17,9 @@
 					return item.children;
 				}
 
-				console.log('CHECKING', pathname, child.page?.permalink || child.department?.slug);
 			}
 		}
 	}
-
-	console.log('OTHER SITES', otherSites);
 </script>
 
 {#if otherSites.length > 0}

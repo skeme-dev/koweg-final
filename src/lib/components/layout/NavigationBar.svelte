@@ -22,7 +22,6 @@
 		globals?.logo_dark_mode ? `${directusURL}/assets/${globals.logo_dark_mode}` : ''
 	);
 
-	console.log(navigation.items)
 </script>
 
 <header class="bg-background font-heading text-foreground sticky top-0 z-50 w-full">
