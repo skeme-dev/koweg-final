@@ -45,15 +45,11 @@
 		@apply outline-none;
 	}
 
-	[data-background='dark'] {
-		@apply bg-gray dark:bg-[var(--background-variant-color)];
-	}
-
-	:root:not(.dark) [data-background='dark'] {
+	/* :root:not(.dark) [data-background='dark'] {
 		.inline-flex[class*='bg-gray'] {
 			@apply bg-[#172940] text-white hover:bg-accent;
 		}
-	}
+	} */
 }
 
 @layer utilities {
