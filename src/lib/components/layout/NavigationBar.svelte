@@ -80,7 +80,7 @@
 									<DropdownMenu.Item class="!bg-transparent">
 										<a
 											class="hover:text-primary-500 text-lg w-full font-semibold"
-											href={child.page.permalink || "/abteilungen/"+child.department?.slug}>{child.title}</a
+											href={child.page?.permalink || "/abteilungen/"+child.department?.slug}>{child.title}</a
 										>
 									</DropdownMenu.Item>
 								{/each}
