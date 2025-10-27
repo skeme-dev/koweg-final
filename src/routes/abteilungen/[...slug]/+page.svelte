@@ -43,14 +43,13 @@
     {#if department.teams.length > 0}
         <div class="space-y-3">
             <Headline as="h3" headline="Unsere Mannschaften" />
-            <TeamGallery data={{items: department.teams}} />
+            <TeamGallery data={{items: department.teams, departmentSlug: department.slug}} />
         </div>
     {/if}
 
 
     {#if department.related_posts.length > 0}
     <div class="space-y-3">
-        <!-- <Headline as="h3" headline="Aktuelle Beiträge" /> -->
         <Posts data={{ headline: "Aktuelle Beiträge", posts: department.related_posts, limit: 3 }} />
         
     </div>

@@ -18,13 +18,23 @@
 		};
 	}
 
+	const dayTranslations = {
+		mon: "Montag",
+		tue: "Dienstag",
+		wed: "Mittwoch",
+		thu: "Donnerstag",
+		fri: "Freitag",
+		sat: "Samstag",
+		sun: "Sonntag"
+	}
+
 	const { schedule } = $derived(data);
-</script>
+</script>  
 
 <div class="flex w-full flex-col md:space-y-0">
 	<div class="relative flex bg-[#eee] p-6 md:w-full">
 		<div class="flex flex-1 flex-col space-y-3">
-			<h1 class="text-2xl font-semibold">{schedule.day}</h1>
+			<h1 class="text-2xl font-semibold">{dayTranslations[schedule.day]}</h1>
 			<span class="text-lg"
 				>{schedule.start.split(':').slice(0, 2).join(':')} - {schedule.end
 					.split(':')

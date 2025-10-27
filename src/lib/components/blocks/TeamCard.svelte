@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from "$app/state";
 	import DirectusImage from "../shared/DirectusImage.svelte";
 
     let {data, galleryMode = false}: TeamCardProps = $props();
@@ -11,14 +12,15 @@
                 image: {
                     id: string;
                 }
-            }
+            },
+            departmentSlug: string;
         },
         galleryMode?: boolean;
     }
 
     const team = $derived(data.team);
 
-    console.log(team)
+    console.log(page.data)
 </script>
 
 {#if galleryMode}
@@ -29,7 +31,7 @@
             {/if}
         </div>
         <div class="p-6 flex justify-center items-center">
-            <a href={"/teams/" + team.slug} class="text-center font-medium text-xl">{team.title}</a>
+            <a href={`/abteilungen/${data.departmentSlug}/teams/${team.slug}`} class="text-center font-medium text-xl">{team.title}</a>
         </div>
     </div>
 {/if}

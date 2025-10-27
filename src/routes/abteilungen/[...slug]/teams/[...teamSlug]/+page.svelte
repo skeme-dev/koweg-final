@@ -8,7 +8,7 @@
 
     let { data } = $props();
 
-    const team = $derived(data.teams.find((t) => t.slug === page.params.slug) ?? {});
+    const team = $derived(data.teams.find((t) => t.slug === page.params.teamSlug) ?? {});
 
 	console.log(team);
 </script>

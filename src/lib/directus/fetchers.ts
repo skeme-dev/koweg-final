@@ -54,7 +54,7 @@ export const fetchDepartmentsData = async (fetch: RequestEvent["fetch"]) => {
 			"description",
 			"slug",
 			{
-				leader: ["first_name", "last_name", "email", {
+				leader: ["first_name", "last_name", "email", "title", {
 					avatar: ["id"]
 				}]
 			},
@@ -212,7 +212,7 @@ export const fetchPageData = async (
 								}],
 								block_person_card: [
 									{
-										person: ["first_name", "last_name", "email", {
+										person: ["first_name", "last_name", "email", "title", {
 										avatar: ["id"]
 									}]}
 								],
@@ -331,7 +331,7 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 								'title',
 								{
 									page: ['permalink'],
-									children: ['id', 'title', 'url', { page: ['permalink'], department: ["slug"] }]
+									children: ['id', 'title', 'url', { page: ['permalink'], department: ["id", "slug"] }]
 								},
 							]
 						}
