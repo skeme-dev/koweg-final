@@ -9,11 +9,12 @@
 	import { PUBLIC_DIRECTUS_URL } from '$env/static/public';
 	import HeroImage from '$lib/components/layout/HeroImage.svelte';
 	import PageBreadcrumb from '$lib/components/layout/PageBreadcrumb.svelte';
+	import BaseLayout from '$lib/components/layout/BaseLayout.svelte';
 
 	let { children, data } = $props();
 
-	const siteTitle = $derived(data.globals?.title || "SV Koweg e.V.");
-	$inspect(siteTitle)
+	const siteTitle = $derived(data.globals?.title || 'SV Koweg e.V.');
+	$inspect(siteTitle);
 	const siteDescription = $derived(
 		page.data.globals?.description || 'A starter CMS template powered by Svelte and Directus.'
 	);
@@ -33,7 +34,7 @@
 	// 		// }
 	// 	});
 	// });
-
+	console.log('layout data', page.url.pathname.startsWith('/blog/'));
 </script>
 
 <svelte:head>
@@ -43,14 +44,10 @@
 	{@html `<style>:root{ --accent-color: ${accentColor} !important }</style>`}
 </svelte:head>
 
-
 <NavigationBar />
-<HeroImage image={page.data.hero_image} />
-<main class="flex-grow">
-	{#if page.data?.template != 'landing_page'}
-		<PageBreadcrumb />
-	{/if}
-
-	{@render children()}
-</main>
+<BaseLayout>
+	<main class="flex-grow">
+		{@render children()}
+	</main>
+</BaseLayout>
 <Footer />

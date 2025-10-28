@@ -31,7 +31,7 @@
 </script>
 
 {#if otherSites.length > 0}
-	<div class="mr-12 flex flex-col">
+	<div class="mr-12 hidden flex-col lg:flex">
 		<h1 class="mb-3 text-xl font-semibold">Weitere Seiten</h1>
 		<ul class="divide-y">
 			{#each otherSites as site}
@@ -40,7 +40,10 @@
 					<Collapsible.Root>
 						<Collapsible.Trigger class="w-full">
 							<li class="w-full py-2 flex items-center space-x-3">
-								<ChevronDown class="w-4 h-4" />
+								<!-- <ChevronDown class="w-4 h-4" /> -->
+								<ChevronDown
+									class="relative top-[1px] ml-1 size-3 transition duration-200 group-data-[state=open]:rotate-180"
+								/>
 								<a class="text-lg" href={`/abteilungen/${site.page?.permalink || site.department?.slug}`}
 									>{site.title}</a
 								>

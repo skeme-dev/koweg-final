@@ -388,7 +388,7 @@ export const fetchPostBySlug = async (
 			readItems('posts', {
 				filter,
 				limit: 1,
-				fields: ['id', 'title', 'content', 'status', 'image', 'description', 'author', 'seo']
+				fields: ['id', 'title', 'content', 'status', 'image', 'description', 'author', 'seo', "related_department", "related_team"]
 			})
 		);
 
@@ -398,7 +398,7 @@ export const fetchPostBySlug = async (
 			console.error(`No post found with slug: ${slug}`);
 
 			return null;
-		}
+		} 
 
 		return post;
 	} catch (error) {
@@ -410,6 +410,8 @@ export const fetchPostBySlug = async (
 /**
  * Fetches related blog posts excluding the given ID.
  */
+
+// TODO fetch related posts based on deparrtment or team
 export const fetchRelatedPosts = async (excludeId: string, fetch: RequestEvent['fetch']) => {
 	const { getDirectus, readItems } = useDirectus();
 	const directus = getDirectus(fetch);

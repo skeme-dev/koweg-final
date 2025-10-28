@@ -1,7 +1,9 @@
 <script lang="">
 	import { page } from "$app/state";
 	import Breadcrumb from "../ui/breadcrumb/breadcrumb.svelte";
+	import HeroImage from "./HeroImage.svelte";
 	import NavigationBar from "./NavigationBar.svelte";
+	import PageBreadcrumb from "./PageBreadcrumb.svelte";
 	import LandingLayout from "./templates/LandingLayout.svelte";
 	import MainLayout from "./templates/MainLayout.svelte";
 	import SubPageLayout from "./templates/SubPageLayout.svelte";
@@ -15,7 +17,11 @@
     let { children } = $props();
 </script>
 
-<!-- Hero image -->
+
+{#if page.data?.template != 'landing_page' && !page.url.pathname.startsWith('/blog/')}
+<HeroImage image={page.data?.hero_image} />
+		<PageBreadcrumb />
+{/if}
 
 {#if page.data.template == templateNames.main}
     <MainLayout>
@@ -25,10 +31,10 @@
     <LandingLayout >
         {@render children()}
     </LandingLayout>
-{:else if page.data.template == templateNames.subpage}
+{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith("/abteilungen") || page.url.pathname.startsWith("/teams")}
     <SubPageLayout>
         {@render children()}
     </SubPageLayout> 
 {:else}
-    <p>Achtung es wurde kein template ausgewählt.</p>
+    {@render children()}
 {/if}

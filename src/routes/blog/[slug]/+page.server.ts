@@ -9,9 +9,11 @@ export const load = (async (event) => {
 	const slug = event.params.slug;
 	const post = await fetchPostBySlug(slug, { draft }, event.fetch);
 
+	console.log(post);
+
 	if (!post) {
 		error(404, {
-			message: 'Post Not found'
+			message: 'Bericht konnte nicht gefunden werden.'
 		});
 	}
 	// TODO optimize this to run in parallel
