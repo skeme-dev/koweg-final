@@ -123,7 +123,7 @@
 
 			<div>
 				<Separator class="my-4" />
-				<h3 class="mb-4 font-bold">Related Posts</h3>
+				<h3 class="mb-4 font-bold">Verwandte Berichte</h3>
 				<div class="space-y-4">
 					{#each data.relatedPosts as relatedPost (relatedPost.id)}
 						<a

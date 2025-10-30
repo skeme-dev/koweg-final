@@ -37,12 +37,12 @@
 	<Dialog.Trigger>
 		<Button variant="outline" class="flex items-center space-x-2">
 			<Share class="size-4" />
-			<span>Share Blog</span>
+			<span>Bericht teilen</span>
 		</Button>
 	</Dialog.Trigger>
 	<Dialog.Content class="sm:max-w-md">
 		<Dialog.Header>
-			<Dialog.Title>Share this blog post</Dialog.Title>
+			<Dialog.Title>Teile diesen Bericht</Dialog.Title>
 		</Dialog.Header>
 		<div class="mb-1 flex justify-center space-x-4">
 			{#each socialLinks as social (social.service)}
@@ -68,16 +68,16 @@
 				<Input id="link" value={postUrl} readonly />
 			</div>
 			<Button type="button" size="sm" class="px-3" onclick={handleCopy}>
-				<span class="sr-only">Copy</span>
+				<span class="sr-only">Kopieren</span>
 				<Copy />
 			</Button>
 		</div>
 		{#if copied}
-			<p class="mt-2 text-sm text-green-600">Link copied to clipboard!</p>
+			<p class="mt-2 text-sm text-green-600">Link kopiert!</p>
 		{/if}
 		<Dialog.Footer class="sm:justify-start">
 			<Dialog.Close>
-				<Button type="button" variant="secondary">Close</Button>
+				<Button type="button" variant="secondary">Schließen</Button>
 			</Dialog.Close>
 		</Dialog.Footer>
 	</Dialog.Content>

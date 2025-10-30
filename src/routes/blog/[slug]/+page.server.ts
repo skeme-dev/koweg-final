@@ -5,11 +5,11 @@ import type { PageServerLoad } from './$types';
 import { error } from '@sveltejs/kit';
 import { DRAFT_MODE_SECRET } from '$env/static/private';
 export const load = (async (event) => {
-	const draft = event.url.searchParams.get('draft') === 'true' && event.url.searchParams.get('token') === DRAFT_MODE_SECRET;
+	const draft =
+		event.url.searchParams.get('draft') === 'true' &&
+		event.url.searchParams.get('token') === DRAFT_MODE_SECRET;
 	const slug = event.params.slug;
 	const post = await fetchPostBySlug(slug, { draft }, event.fetch);
-
-	console.log(post);
 
 	if (!post) {
 		error(404, {
@@ -18,7 +18,12 @@ export const load = (async (event) => {
 	}
 	// TODO optimize this to run in parallel
 	const ogImage = post.image ? getDirectusAssetURL(post.image) : null;
-	const relatedPosts = await fetchRelatedPosts(post.id, event.fetch);
+	const relatedPosts = await fetchRelatedPosts(
+		post.id,
+		post.related_department,
+		post.related_team,
+		event.fetch
+	);
 	const author = post.author ? await fetchAuthorById(post.author as string, event.fetch) : null;
 
 	return {

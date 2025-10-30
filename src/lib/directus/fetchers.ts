@@ -4,75 +4,114 @@ import { type BlockPost, type PageBlock, type Post, type Schema } from '../types
 import { useDirectus } from './directus';
 import { type QueryFilter, aggregate, readItem, readSingleton } from '@directus/sdk';
 
-export const fetchTeamsData = async (fetch: RequestEvent["fetch"]) => {
+export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 	const { getDirectus, readItems } = useDirectus();
 
 	const directus = getDirectus(fetch);
 
-	const teamsData = await directus.request(readItems("teams", {
-		fields: [
-			"id",
-			"title",
-			"slug",
-			"description",
-			{
-				image: ["id"]
-			},
-			{
-				members: ["first_name", "last_name", "email", {
-					avatar: ["id"]
-				}]
-			},
-			{
-				related_department: ["id", "title", "slug"]
-			},
-			{
-				related_posts: ["id", "description", "title", "slug", {
-					image: ["id"]
-				}]
-			},
-			{
-				trainings: ["title", "day", {
-					location: ["title", "link"]
-				}, "min_age", "max_age", "start", "end"]
-			}
-		]
-	}));
+	const teamsData = await directus.request(
+		readItems('teams', {
+			fields: [
+				'id',
+				'title',
+				'slug',
+				'description',
+				{
+					image: ['id']
+				},
+				{
+					members: [
+						'first_name',
+						'last_name',
+						'email',
+						{
+							avatar: ['id']
+						}
+					]
+				},
+				{
+					related_department: ['id', 'title', 'slug']
+				},
+				{
+					related_posts: [
+						'id',
+						'description',
+						'title',
+						'slug',
+						{
+							image: ['id']
+						}
+					]
+				},
+				{
+					trainings: [
+						'title',
+						'day',
+						{
+							location: ['title', 'link']
+						},
+						'min_age',
+						'max_age',
+						'start',
+						'end'
+					]
+				}
+			]
+		})
+	);
 
 	return teamsData;
-}
+};
 
-export const fetchDepartmentsData = async (fetch: RequestEvent["fetch"]) => {
+export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 	const { getDirectus, readItems } = useDirectus();
 
 	const directus = getDirectus(fetch);
 
-	const departmentsData = await directus.request(readItems("departments", {
-		fields: [
-			"id",
-			"title",
-			"description",
-			"slug",
-			{
-				leader: ["first_name", "last_name", "email", "title", {
-					avatar: ["id"]
-				}]
-			},
-			{
-				teams: ["title", "slug", "description", {
-					image: ["id"]
-				}]
-			},
-			{
-				related_posts: ["id", "description", "title", "slug", {
-					image: ["id"]
-				}]
-			}
-		]
-	}))
+	const departmentsData = await directus.request(
+		readItems('departments', {
+			fields: [
+				'id',
+				'title',
+				'description',
+				'slug',
+				{
+					leader: [
+						'first_name',
+						'last_name',
+						'email',
+						'title',
+						{
+							avatar: ['id']
+						}
+					]
+				},
+				{
+					teams: [
+						'title',
+						'slug',
+						'description',
+						{
+							image: ['id']
+						}
+					]
+				},
+				{
+					related_posts: [
+						'id',
+						'description',
+						'title',
+						'slug',
+						{
+							image: ['id']
+						}
+					]
+				}
+			]
+		})
+	);
 	return departmentsData;
-}
-
+};
 
 /**
  * Fetches page data by permalink, including all nested blocks and dynamically fetching blog posts if required.
@@ -93,9 +132,9 @@ export const fetchPageData = async (
 				'id',
 				'title',
 				'template',
-				"permalink",
+				'permalink',
 				{
-					"hero_image": ["id"]
+					hero_image: ['id']
 				},
 				{
 					blocks: [
@@ -197,56 +236,93 @@ export const fetchPageData = async (
 										]
 									}
 								],
-								block_file_card: [{
-									file: ["id", "filename_download"]
-								}],
-								block_timeline: [
+								block_file_card: [
 									{
-										timeline_items: ["sort", "title", "description", {
-											image: ["id"]
-										}]
+										file: ['id', 'filename_download']
 									}
 								],
-								block_location_card: ["title", "description", "link", {
-									image: ["id"]
-								}],
+								block_timeline: [
+									{
+										timeline_items: [
+											'sort',
+											'title',
+											'description',
+											{
+												image: ['id']
+											}
+										]
+									}
+								],
+								block_location_card: [
+									'title',
+									'description',
+									'link',
+									{
+										image: ['id']
+									}
+								],
 								block_person_card: [
 									{
-										person: ["first_name", "last_name", "email", "title", {
-										avatar: ["id"]
-									}]}
+										person: [
+											'first_name',
+											'last_name',
+											'email',
+											'title',
+											{
+												avatar: ['id']
+											}
+										]
+									}
 								],
 								block_opening_time: [
-									"sort",
+									'sort',
 									{
-										openings: ["value", "label"],
+										openings: ['value', 'label']
 									}
 								],
 								block_sponsor_gallery: [
-									"title",
+									'title',
 									{
-										
-										items: [{
-											sponsor: ["id", "title", "type", "link", "sort", {
-												image: ["id"]
-											}]
-										}]
+										items: [
+											{
+												sponsor: [
+													'id',
+													'title',
+													'type',
+													'link',
+													'sort',
+													{
+														image: ['id']
+													}
+												]
+											}
+										]
 									}
 								],
 								block_team_card: [
 									{
-										team: ["title", "slug", {
-											image: ["id"]
-										}]
+										team: [
+											'title',
+											'slug',
+											{
+												image: ['id']
+											}
+										]
 									}
 								],
 								block_team_gallery: [
 									{
-										items: [{
-											team: ["title", "slug", {
-												image: ["id"]
-											}]
-										}]
+										items: [
+											{
+												team: [
+													'title',
+													'slug',
+													{
+														image: ['id']
+													}
+												]
+											}
+										]
 									}
 								]
 							}
@@ -331,8 +407,13 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 								'title',
 								{
 									page: ['permalink'],
-									children: ['id', 'title', 'url', { page: ['permalink'], department: ["id", "slug"] }]
-								},
+									children: [
+										'id',
+										'title',
+										'url',
+										{ page: ['permalink'], department: ['id', 'slug'] }
+									]
+								}
 							]
 						}
 					],
@@ -388,7 +469,18 @@ export const fetchPostBySlug = async (
 			readItems('posts', {
 				filter,
 				limit: 1,
-				fields: ['id', 'title', 'content', 'status', 'image', 'description', 'author', 'seo', "related_department", "related_team"]
+				fields: [
+					'id',
+					'title',
+					'content',
+					'status',
+					'image',
+					'description',
+					'author',
+					'seo',
+					'related_department',
+					'related_team'
+				]
 			})
 		);
 
@@ -398,7 +490,7 @@ export const fetchPostBySlug = async (
 			console.error(`No post found with slug: ${slug}`);
 
 			return null;
-		} 
+		}
 
 		return post;
 	} catch (error) {
@@ -412,14 +504,33 @@ export const fetchPostBySlug = async (
  */
 
 // TODO fetch related posts based on deparrtment or team
-export const fetchRelatedPosts = async (excludeId: string, fetch: RequestEvent['fetch']) => {
+export const fetchRelatedPosts = async (
+	excludeId: string,
+	relatedDepartmentId: string,
+	relatedTeamId: string,
+	fetch: RequestEvent['fetch']
+) => {
 	const { getDirectus, readItems } = useDirectus();
 	const directus = getDirectus(fetch);
 
 	try {
 		const relatedPosts = await directus.request(
 			readItems('posts', {
-				filter: { status: { _eq: 'published' }, id: { _neq: excludeId } },
+				filter: {
+					_or: [
+						{
+							related_department: {
+								id: { _eq: relatedDepartmentId }
+							}
+						},
+						{
+							related_team: {
+								id: { _eq: relatedTeamId }
+							}
+						}
+					],
+					id: { _neq: excludeId }
+				},
 				fields: ['id', 'title', 'image', 'slug'],
 				limit: 2
 			})
