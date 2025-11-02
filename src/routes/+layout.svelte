@@ -34,7 +34,6 @@
 	// 		// }
 	// 	});
 	// });
-	console.log('layout data', page.url.pathname.startsWith('/blog/'));
 </script>
 
 <svelte:head>

@@ -53,7 +53,7 @@
 </script>
 
 {#if page.data?.template != 'landing_page'}
-	<div class="mx-auto mb-6 mt-12 flex max-w-7xl sm:px-6 lg:px-16">
+	<div class="mb-6 mt-12 flex max-w-7xl">
 		<div class="flex items-center justify-center space-x-6">
 			<span class="text-lg">Sie befinden sich hier: </span>
 
