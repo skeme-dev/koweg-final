@@ -34,6 +34,8 @@
 	// 		// }
 	// 	});
 	// });
+
+	console.log('globals', page.data.globals);
 </script>
 
 <svelte:head>

@@ -2,7 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+
+
+@layer components {
+	.hero-text p {
+	  @apply text-white text-2xl font-medium md:text-left text-center;
+	}
+	.hero-text h1 {
+	  @apply text-white font-bold md:text-5xl text-4xl mb-12 md:text-left text-center;
+	}
+
+	.about-text h1 {
+		@apply font-bold md:text-4xl text-3xl mb-6;
+	}
+
+	.about-text p {
+		@apply md:text-xl md:leading-snug text-justify font-semibold;
+	}
+  }
+  
+  :root {
 	--background-color: #ffffff; /* Light background */
 	--foreground-color: #000; /* Light text */
 	--background-color-muted: color-mix(

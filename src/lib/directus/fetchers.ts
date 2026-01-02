@@ -392,6 +392,19 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 						'favicon',
 						{
 							main_sponsors: ['id', 'title', 'type', 'link', 'sort', { image: ['id'] }]
+						},
+						'hero_image_text',
+						'about_text',
+						{
+							shown_posts: [
+								'id',
+								'description',
+								'title',
+								'slug',
+								{
+									image: ['id']
+								}
+							]
 						}
 					]
 				})

@@ -44,24 +44,7 @@
 		<Dialog.Header>
 			<Dialog.Title>Teile diesen Bericht</Dialog.Title>
 		</Dialog.Header>
-		<div class="mb-1 flex justify-center space-x-4">
-			{#each socialLinks as social (social.service)}
-				<a
-					href={social.url}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex items-center justify-center rounded bg-transparent transition-colors hover:opacity-70"
-				>
-					<img
-						src={social.icon}
-						alt={`${social.service} icon`}
-						width={32}
-						height={32}
-						class="size-8 dark:invert"
-					/>
-				</a>
-			{/each}
-		</div>
+
 		<div class="flex items-center space-x-2">
 			<div class="grid flex-1 gap-2">
 				<Label for="link" class="sr-only">Link</Label>

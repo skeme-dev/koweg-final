@@ -22,24 +22,26 @@
 	<HeroImage image={page.data?.hero_image} />
 {/if}
 
-<Container class="w-full">
-	{#if page.data?.template != 'landing_page' && !page.url.pathname.startsWith('/blog/')}
-		<PageBreadcrumb />
-	{/if}
-
-	{#if page.data.template == templateNames.main}
-		<MainLayout>
-			{@render children()}
-		</MainLayout>
-	{:else if page.data.template == templateNames.landing}
-		<LandingLayout>
-			{@render children()}
-		</LandingLayout>
-	{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith('/abteilungen') || page.url.pathname.startsWith('/teams')}
-		<SubPageLayout>
-			{@render children()}
-		</SubPageLayout>
-	{:else}
+{#if page.data.template == 'landing_page'}
+	<LandingLayout>
 		{@render children()}
-	{/if}
-</Container>
+	</LandingLayout>
+{:else}
+	<Container class="w-full">
+		{#if page.data?.template != 'landing_page' && !page.url.pathname.startsWith('/blog/')}
+			<PageBreadcrumb />
+		{/if}
+
+		{#if page.data.template == templateNames.main}
+			<MainLayout>
+				{@render children()}
+			</MainLayout>
+		{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith('/abteilungen') || page.url.pathname.startsWith('/teams')}
+			<SubPageLayout>
+				{@render children()}
+			</SubPageLayout>
+		{:else}
+			{@render children()}
+		{/if}
+	</Container>
+{/if}
