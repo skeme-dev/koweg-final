@@ -23,7 +23,7 @@
 {/if}
 
 <Container class="w-full">
-	{#if page.data?.template != 'landing_page' && !page.url.pathname.startsWith('/blog/')}
+	{#if page.data?.template != 'landing_page'}
 		<PageBreadcrumb />
 	{/if}
 
@@ -35,7 +35,7 @@
 		<LandingLayout>
 			{@render children()}
 		</LandingLayout>
-	{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith('/abteilungen') || page.url.pathname.startsWith('/teams')}
+	{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith('/abteilungen') || page.url.pathname.startsWith('/teams') || page.url.pathname.startsWith('/events') || page.url.pathname.startsWith('/blog')}
 		<SubPageLayout>
 			{@render children()}
 		</SubPageLayout>
