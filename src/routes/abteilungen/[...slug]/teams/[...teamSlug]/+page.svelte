@@ -5,13 +5,23 @@
 	import RichText from '$lib/components/blocks/RichText.svelte';
 	import Headline from '$lib/components/ui/Headline.svelte';
 	import TrainingCard from '$lib/components/ui/TrainingCard.svelte';
+	import EventSection from '$lib/components/blocks/EventSection.svelte';
 
     let { data } = $props();
 
     const team = $derived(data.teams.find((t) => t.slug === page.params.teamSlug) ?? {});
-
-	console.log(team);
+	const teamEvents = $derived(data.teamEvents ?? []);
 </script>
+
+<svelte:head>
+	{#if team?.title}
+		<title>{team.title} | SV Koweg e.V.</title>
+		<meta name="description" content={team.description?.replace(/<[^>]*>/g, '').slice(0, 160) ?? ''} />
+		<meta property="og:title" content="{team.title} | SV Koweg e.V." />
+		<meta property="og:description" content={team.description?.replace(/<[^>]*>/g, '').slice(0, 160) ?? ''} />
+		<meta property="og:type" content="website" />
+	{/if}
+</svelte:head>
 
 <div class="flex-grow space-y-10 mb-12 mt-6">
 	<div class="">
@@ -26,7 +36,7 @@
 		/>
 	</div>
 
-	{#if team.members.length > 0}
+	{#if team.members?.length > 0}
 		<div class="space-y-3">
 			<Headline as="h3" headline="Verantwortliche Personen" />
 			{#each team.members as item}
@@ -35,7 +45,7 @@
 		</div>
 	{/if}
 
-    {#if team.trainings.length > 0}
+	{#if team.trainings?.length > 0}
 		<div class="space-y-3">
 			<Headline as="h3" headline="Trainingszeiten" />
 			{#each team.trainings as schedule}
@@ -44,11 +54,16 @@
 		</div>
 	{/if}
 
-    {#if team.related_posts.length > 0}
-    <div class="space-y-3">
-        <!-- <Headline as="h3" headline="Aktuelle Beiträge" /> -->
-        <Posts data={{ headline: "Aktuelle Beiträge", posts: team.related_posts, limit: 3 }} />
-        
-    </div>
-    {/if}
+	{#if teamEvents.length > 0}
+		<div class="space-y-3">
+			<Headline as="h3" headline="Veranstaltungen" />
+			<EventSection events={teamEvents} linkBase="/events" />
+		</div>
+	{/if}
+
+	{#if team.related_posts?.length > 0}
+		<div class="space-y-3">
+			<Posts data={{ headline: "Aktuelle Beiträge", posts: team.related_posts, limit: 3 }} />
+		</div>
+	{/if}
 </div>

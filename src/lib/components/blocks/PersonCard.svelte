@@ -29,7 +29,7 @@
 				width={450}
 				height={160}
 				uuid={person.avatar.id}
-				alt={'Foto von ' + person.first_name + person.last_name}
+				alt={`Foto von ${person.first_name ?? ''} ${person.last_name ?? ''}`.trim()}
 			/>
 		{/if}
 		<div class="flex flex-col p-12">

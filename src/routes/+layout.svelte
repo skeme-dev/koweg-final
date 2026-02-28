@@ -5,50 +5,40 @@
 	import Footer from '$lib/components/layout/Footer.svelte';
 	import { getDirectusAssetURL } from '$lib/directus/directus-utils';
 	import { page } from '$app/state';
-	import { onMount } from 'svelte';
-	import { PUBLIC_DIRECTUS_URL } from '$env/static/public';
-	import HeroImage from '$lib/components/layout/HeroImage.svelte';
-	import PageBreadcrumb from '$lib/components/layout/PageBreadcrumb.svelte';
 	import BaseLayout from '$lib/components/layout/BaseLayout.svelte';
 
 	let { children, data } = $props();
 
 	const siteTitle = $derived(data.globals?.title || 'SV Koweg e.V.');
-	$inspect(siteTitle);
 	const siteDescription = $derived(
 		page.data.globals?.description || 'A starter CMS template powered by Svelte and Directus.'
 	);
+	const logoURL = $derived(
+		data.globals?.logo ? getDirectusAssetURL(data.globals.logo) : '/images/logo.svg'
+	);
 	const faviconURL = $derived(
-		data.globals?.favicon ? getDirectusAssetURL(data.globals.favicon) : '/favicon.ico'
+		data.globals?.favicon ? getDirectusAssetURL(data.globals.favicon) : logoURL
 	);
 	const accentColor = $derived(data.globals?.accent_color || '#6644ff');
 
-	// onMount(async () => {
-	// 	const { apply } = await import('@directus/visual-editing');
-	// 	apply({
-	// 		directusUrl: PUBLIC_DIRECTUS_URL
-	// 		// onSaved: async (...e) => {
-	// 		// 	console.log('SAVED', e);
-	// 		// 	await new Promise((r) => setTimeout(r, 2000));
-	// 		// 	await invalidateAll();
-	// 		// }
-	// 	});
-	// });
-
-	console.log('globals', page.data.globals);
+	// Validate accent color to prevent XSS via @html style injection
+	const safeAccentColor = $derived(
+		/^#[0-9a-fA-F]{3,8}$/.test(accentColor) ? accentColor : '#6644ff'
+	);
 </script>
 
 <svelte:head>
 	<title>{siteTitle} | SV Koweg e.V.</title>
 	<meta name="description" content={siteDescription} />
 	<link rel="icon" href={faviconURL} />
-	{@html `<style>:root{ --accent-color: ${accentColor} !important }</style>`}
 </svelte:head>
 
-<NavigationBar />
-<BaseLayout>
-	<main class="flex-grow">
-		{@render children()}
-	</main>
-</BaseLayout>
-<Footer />
+<div style="--accent-color: {safeAccentColor};">
+	<NavigationBar />
+	<BaseLayout>
+		<main class="flex-grow">
+			{@render children()}
+		</main>
+	</BaseLayout>
+	<Footer />
+</div>

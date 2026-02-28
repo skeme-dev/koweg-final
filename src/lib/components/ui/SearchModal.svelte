@@ -19,6 +19,7 @@
 		title: string;
 		description: string;
 		type: string;
+		subtype?: string;
 		link: string;
 	};
 
@@ -80,34 +81,39 @@
 
 	<Command.Dialog bind:open shouldFilter={false}>
 		<Command.Input
-			placeholder="Type a command or search..."
+			placeholder="Seite, Beitrag oder Event suchen..."
 			bind:value={search}
 			class="m-2 p-4 text-base leading-normal focus:outline-none"
 		/>
 		<Command.List>
 			{#if !loading && !searched}
-				<Command.Empty>No results found.</Command.Empty>
+				<Command.Empty>Keine Ergebnisse gefunden.</Command.Empty>
 			{/if}
 
 			{#if loading}
-				<Command.Empty class="py-2 text-center text-sm">Loading...</Command.Empty>
+				<Command.Empty class="py-2 text-center text-sm">Suche läuft...</Command.Empty>
 			{/if}
 
 			{#if !loading && searched && results.length === 0}
-				<Command.Empty class="py-2 text-center text-sm">No results found.</Command.Empty>
+				<Command.Empty class="py-2 text-center text-sm">Keine Ergebnisse gefunden.</Command.Empty>
 			{/if}
 
 			{#if results.length > 0}
-				<Command.Group heading="Search Results">
+				<Command.Group heading="Suchergebnisse">
 					{#each results as result}
 						<Command.Item
 							class="flex items-start gap-4 px-2 py-3"
 							onSelect={() => handleSelect(result)}
 						>
 							<Badge variant="default">{result.type}</Badge>
+							{#if result.subtype}
+								<Badge variant="secondary">{result.subtype}</Badge>
+							{/if}
 							<div class="ml-2 w-full">
 								<p class="text-base font-medium">{result.title}</p>
-								<p class="mt-1 line-clamp-2 text-sm">{result.description}</p>
+								{#if result.description}
+									<p class="mt-1 line-clamp-2 text-sm">{result.description}</p>
+								{/if}
 							</div>
 						</Command.Item>
 					{/each}

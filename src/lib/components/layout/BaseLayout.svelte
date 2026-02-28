@@ -36,7 +36,7 @@
 			<MainLayout>
 				{@render children()}
 			</MainLayout>
-		{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith('/abteilungen') || page.url.pathname.startsWith('/teams')}
+		{:else if page.data.template == templateNames.subpage || page.url.pathname.startsWith('/abteilungen') || page.url.pathname.startsWith('/teams') || page.url.pathname.startsWith('/events') || page.url.pathname.startsWith('/blog')}
 			<SubPageLayout>
 				{@render children()}
 			</SubPageLayout>

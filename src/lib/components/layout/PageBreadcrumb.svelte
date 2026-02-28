@@ -11,29 +11,64 @@
 		// Root → keine Crumbs
 		if (path === '/') return [];
 
-		// feste Routen
-		// if (path.startsWith('/teams/')) {
-		// 	const [, , teamSlug] = path.split('/');
-		// 	const team = teamSlug ? page.data?.teams?.find((team) => team.slug === teamSlug) : null;
-		// 	return [
-		// 		{ label: 'Teams', href: '/teams' },
-		// 		team ? { label: team.title, href: `/teams/${team.slug}` } : { label: teamSlug ?? 'Team' }
-		// 	];
-		// }
+		// Events-Routen
+		if (path === '/events') {
+			return [{ label: 'Veranstaltungen', href: '/events' }];
+		}
 
+		if (path.startsWith('/events/')) {
+			const eventSlug = pathParts[1];
+			const event = page.data?.event;
+			return [
+				{ label: 'Veranstaltungen', href: '/events' },
+				event
+					? { label: event.title, href: `/events/${event.slug}` }
+					: { label: eventSlug ?? 'Event' }
+			];
+		}
+
+		// Blog-Routen
+		if (path === '/blog') {
+			return [{ label: 'Blog', href: '/blog' }];
+		}
+
+		if (path.startsWith('/blog/')) {
+			const postSlug = pathParts[1];
+			const post = page.data?.post;
+			return [
+				{ label: 'Blog', href: '/blog' },
+				post
+					? { label: post.title, href: `/blog/${postSlug}` }
+					: { label: postSlug ?? 'Beitrag' }
+			];
+		}
+
+		// Teams-Routen (Top-Level)
+		if (path.startsWith('/teams/')) {
+			const teamSlug = pathParts[1];
+			const team = teamSlug ? page.data?.teams?.find((t: any) => t.slug === teamSlug) : null;
+			return [
+				{ label: 'Teams', href: '/teams' },
+				team
+					? { label: team.title, href: `/teams/${team.slug}` }
+					: { label: teamSlug ?? 'Mannschaft' }
+			];
+		}
+
+		// Abteilungen-Routen
 		if (path.startsWith('/abteilungen/')) {
 			const [, , depSlug] = path.split('/');
-			const dep = depSlug ? page.data.departments?.find((dep) => dep.slug === depSlug) : null;
+			const dep = depSlug ? page.data.departments?.find((dep: any) => dep.slug === depSlug) : null;
 			if (pathParts.includes('teams')) {
 				const teamSlug = pathParts[3];
-				const team = teamSlug ? page.data?.teams?.find((team) => team.slug === teamSlug) : null;
+				const team = teamSlug ? page.data?.teams?.find((t: any) => t.slug === teamSlug) : null;
 				return [
 					{ label: 'Abteilungen', href: '/abteilungen' },
 					dep
 						? { label: dep.title, href: `/abteilungen/${dep.slug}` }
 						: { label: depSlug ?? 'Abteilung' },
 					team
-						? { label: team.title, href: `/abteilungen/${dep.slug}/teams/${team.slug}` }
+						? { label: team.title, href: `/abteilungen/${dep?.slug}/teams/${team.slug}` }
 						: { label: teamSlug ?? 'Mannschaft' }
 				];
 			} else {
@@ -52,10 +87,10 @@
 	const breadcrumb = $derived.by(() => buildBreadcrumb());
 </script>
 
-{#if page.data?.template != 'landing_page'}
-	<div class="mb-6 mt-12 flex max-w-7xl">
-		<div class="flex items-center justify-center space-x-6">
-			<span class="text-lg">Sie befinden sich hier: </span>
+{#if page.data?.template != 'landing_page' && breadcrumb.length > 0}
+	<div class="mb-4 mt-8 flex max-w-7xl sm:mb-6 sm:mt-12">
+		<div class="flex flex-wrap items-center gap-x-4 gap-y-1 sm:gap-x-6">
+			<span class="hidden text-lg sm:inline">Sie befinden sich hier: </span>
 
 			<Breadcrumb.Root>
 				<Breadcrumb.List>

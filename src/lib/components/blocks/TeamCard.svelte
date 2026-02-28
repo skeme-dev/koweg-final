@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { page } from "$app/state";
 	import DirectusImage from "../shared/DirectusImage.svelte";
 
     let {data, galleryMode = false}: TeamCardProps = $props();
@@ -19,8 +18,6 @@
     }
 
     const team = $derived(data.team);
-
-    console.log(page.data)
 </script>
 
 {#if galleryMode}

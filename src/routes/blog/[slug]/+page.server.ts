@@ -16,15 +16,11 @@ export const load = (async (event) => {
 			message: 'Bericht konnte nicht gefunden werden.'
 		});
 	}
-	// TODO optimize this to run in parallel
 	const ogImage = post.image ? getDirectusAssetURL(post.image) : null;
-	const relatedPosts = await fetchRelatedPosts(
-		post.id,
-		post.related_department,
-		post.related_team,
-		event.fetch
-	);
-	const author = post.author ? await fetchAuthorById(post.author as string, event.fetch) : null;
+	const [relatedPosts, author] = await Promise.all([
+		fetchRelatedPosts(post.id, post.related_department, post.related_team, event.fetch),
+		post.author ? fetchAuthorById(post.author as string, event.fetch) : Promise.resolve(null)
+	]);
 
 	return {
 		post,

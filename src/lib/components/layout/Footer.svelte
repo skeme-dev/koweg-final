@@ -3,11 +3,9 @@
 
 	import { page } from '$app/state';
 	import Container from '../ui/Container.svelte';
-	import LightSwitch from './LightSwitch.svelte';
 	import Headline from '../ui/Headline.svelte';
-	import SponsorCarousel from './SponsorCarousel.svelte';
-	import SplideTest from '../blocks/SplideTest.svelte';
 	import FooterCarousel from './FooterCarousel.svelte';
+	import { sanitizeHtml } from '$lib/utils/sanitize';
 
 	const directusURL = PUBLIC_DIRECTUS_URL;
 
@@ -44,7 +42,7 @@
 	<Container class="text-foreground dark:text-white">
 		<div class="flex flex-col items-start justify-between gap-8 pt-8 md:flex-row">
 			<div class="flex-1">
-				<a class="block" href="/">
+				<!-- <a class="block" href="/">
 					{#if lightLogoUrl}
 						<img
 							src={lightLogoUrl}
@@ -52,11 +50,11 @@
 							class={darkLogoUrl ? 'h-auto w-[100px] dark:hidden' : 'h-auto w-[120px]'}
 						/>
 					{/if}
-				</a>
+				</a> -->
 				{#if globals?.description}
 					<!-- <p class="text-description mt-2">{globals.description}</p> -->
 					 <div class="mt-2">
-						{@html globals.description}
+						{@html sanitizeHtml(globals.description)}
 					 </div>
 				{/if}
 

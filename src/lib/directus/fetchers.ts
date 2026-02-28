@@ -453,8 +453,6 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 			)
 		]);
 
-		console.log(globals, headerNavigation, footerNavigation);
-
 		return { globals, headerNavigation, footerNavigation };
 	} catch (error) {
 		console.error('Error fetching site data:', error);
@@ -621,5 +619,179 @@ export const fetchTotalPostCount = async (): Promise<number> => {
 		console.error('Error fetching total post count:', error);
 
 		return 0;
+	}
+};
+
+// ──────────────────────────────────────────────
+// Event Fetchers
+// ──────────────────────────────────────────────
+
+const eventListFields = [
+	'id',
+	'title',
+	'slug',
+	'description',
+	{ image: ['id'] },
+	'type',
+	'start_date',
+	'end_date',
+	'location_title',
+	'location_link',
+	'max_participants'
+] as const;
+
+/**
+ * Transforms flat location_title/location_link into nested location object
+ * so that existing components can use event.location.title / event.location.link
+ */
+function transformEvent(event: any) {
+	const { location_title, location_link, ...rest } = event;
+	return {
+		...rest,
+		location: location_title
+			? { title: location_title, link: location_link ?? undefined }
+			: undefined
+	};
+}
+
+/**
+ * Fetches all published events sorted by start_date.
+ */
+export const fetchAllEvents = async (fetch: RequestEvent['fetch']) => {
+	const { getDirectus, readItems } = useDirectus();
+	const directus = getDirectus(fetch);
+
+	try {
+		const events = await directus.request(
+			readItems('events', {
+				filter: { status: { _eq: 'published' } },
+				sort: ['start_date'],
+				fields: eventListFields
+			})
+		);
+
+		return events.map(transformEvent);
+	} catch (err) {
+		console.error('Error fetching all events:', err);
+		return [];
+	}
+};
+
+/**
+ * Fetches a single event by slug with full content and registration form.
+ */
+export const fetchEventBySlug = async (slug: string, fetch: RequestEvent['fetch']) => {
+	const { getDirectus, readItems } = useDirectus();
+	const directus = getDirectus(fetch);
+
+	try {
+		const events = await directus.request(
+			readItems('events', {
+				filter: { slug: { _eq: slug }, status: { _eq: 'published' } },
+				limit: 1,
+				fields: [
+					'id',
+					'title',
+					'slug',
+					'description',
+					'content',
+					{ image: ['id'] },
+					'type',
+					'start_date',
+					'end_date',
+					'location_title',
+					'location_link',
+					'max_participants',
+					{
+						registration_form: [
+							'id',
+							'title',
+							'submit_label',
+							'success_message',
+							'on_success',
+							'success_redirect_url',
+							'is_active',
+							{
+								fields: [
+									'id',
+									'name',
+									'type',
+									'label',
+									'placeholder',
+									'help',
+									'validation',
+									'width',
+									'choices',
+									'required',
+									'sort'
+								]
+							}
+						]
+					}
+				]
+			})
+		);
+
+		const event = events[0];
+		if (!event) return null;
+		return transformEvent(event);
+	} catch (err) {
+		console.error(`Error fetching event with slug "${slug}":`, err);
+		return null;
+	}
+};
+
+/**
+ * Fetches published events for a specific department.
+ */
+export const fetchEventsByDepartment = async (
+	departmentId: string,
+	fetch: RequestEvent['fetch']
+) => {
+	const { getDirectus, readItems } = useDirectus();
+	const directus = getDirectus(fetch);
+
+	try {
+		const events = await directus.request(
+			readItems('events', {
+				filter: {
+					status: { _eq: 'published' },
+					related_department: { _eq: departmentId }
+				},
+				sort: ['start_date'],
+				fields: eventListFields
+			})
+		);
+
+		return events.map(transformEvent);
+	} catch (err) {
+		console.error('Error fetching events for department:', err);
+		return [];
+	}
+};
+
+/**
+ * Fetches published events for a specific team.
+ */
+export const fetchEventsByTeam = async (teamId: string, fetch: RequestEvent['fetch']) => {
+	const { getDirectus, readItems } = useDirectus();
+	const directus = getDirectus(fetch);
+
+	try {
+		const events = await directus.request(
+			readItems('events', {
+				filter: {
+					status: { _eq: 'published' },
+					related_team: { _eq: teamId }
+				},
+				sort: ['start_date'],
+				fields: eventListFields
+			})
+		);
+
+		return events.map(transformEvent);
+	} catch (err) {
+		console.error('Error fetching events for team:', err);
+		return [];
 	}
 };
