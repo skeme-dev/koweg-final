@@ -635,8 +635,7 @@ const eventListFields = [
 	'type',
 	'start_date',
 	'end_date',
-	'location_title',
-	'location_link',
+	{location: ["title", "link"]},
 	'max_participants'
 ] as const;
 
@@ -699,8 +698,7 @@ export const fetchEventBySlug = async (slug: string, fetch: RequestEvent['fetch'
 					'type',
 					'start_date',
 					'end_date',
-					'location_title',
-					'location_link',
+					{location: ["title", "link"]},
 					'max_participants',
 					{
 						registration_form: [

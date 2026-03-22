@@ -317,10 +317,12 @@ export interface Event {
 	start_date: string;
 	/** @description End date and time (optional) */
 	end_date?: string | null;
-	/** @description Location name */
-	location_title?: string | null;
-	/** @description Location link (e.g. Google Maps) */
-	location_link?: string | null;
+	location: {
+		/** @description Name of the location (e.g., "Koweg Main Hall") */
+		title?: string | null;
+		/** @description Link to the location (e.g., Google Maps URL) */
+		link?: string | null;
+	} | null;
 	/** @description Maximum number of participants/teams */
 	max_participants?: number | null;
 	/** @description Registration form (M2O to forms) */

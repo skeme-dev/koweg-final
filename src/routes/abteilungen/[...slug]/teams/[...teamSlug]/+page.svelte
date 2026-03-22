@@ -11,6 +11,7 @@
 
     const team = $derived(data.teams.find((t) => t.slug === page.params.teamSlug) ?? {});
 	const teamEvents = $derived(data.teamEvents ?? []);
+
 </script>
 
 <svelte:head>
@@ -39,18 +40,22 @@
 	{#if team.members?.length > 0}
 		<div class="space-y-3">
 			<Headline as="h3" headline="Verantwortliche Personen" />
-			{#each team.members as item}
-				<PersonCard data={{ person: item }} />
-			{/each}
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				{#each team.members as item}
+					<PersonCard data={{ person: item }} />
+				{/each}
+			</div>
 		</div>
 	{/if}
 
 	{#if team.trainings?.length > 0}
 		<div class="space-y-3">
 			<Headline as="h3" headline="Trainingszeiten" />
-			{#each team.trainings as schedule}
-				<TrainingCard data={{ schedule }} />
-			{/each}
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+				{#each team.trainings as schedule}
+					<TrainingCard data={{ schedule }} />
+				{/each}
+			</div>
 		</div>
 	{/if}
 

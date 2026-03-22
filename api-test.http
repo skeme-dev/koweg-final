@@ -1,0 +1,36 @@
+### Lokale Dev-Server URL
+@baseUrl = http://localhost:5173
+
+### Search API - Suche nach Begriff
+GET {{baseUrl}}/api/search?search=tennis
+Accept: application/json
+
+###
+
+### Search API - zu kurze Anfrage (sollte 400 zurückgeben)
+GET {{baseUrl}}/api/search?search=ab
+Accept: application/json
+
+###
+
+### Draft API
+GET {{baseUrl}}/api/draft?secret=DEIN_SECRET&slug=mein-beitrag
+
+###
+
+### Beispiel: POST-Request mit JSON
+# POST {{baseUrl}}/api/irgendein-endpunkt
+# Content-Type: application/json
+#
+# {
+#   "feld1": "wert1",
+#   "feld2": "wert2"
+# }
+
+###
+
+### Beispiel: POST mit Form-Daten
+# POST {{baseUrl}}/api/irgendein-endpunkt
+# Content-Type: application/x-www-form-urlencoded
+#
+# feld1=wert1&feld2=wert2
