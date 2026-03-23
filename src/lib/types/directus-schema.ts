@@ -298,6 +298,48 @@ export interface FormSubmissionValue {
 	timestamp?: string | null;
 }
 
+export interface Event {
+	/** @primaryKey */
+	id: string;
+	/** @description Event title @required */
+	title: string;
+	/** @description URL-friendly slug @required */
+	slug: string;
+	/** @description Short summary of the event */
+	description?: string | null;
+	/** @description Rich text content for the event detail page */
+	content?: string | null;
+	/** @description Featured image for the event */
+	image?: DirectusFile | string | null;
+	/** @description Type of event */
+	type?: 'turnier' | 'veranstaltung' | 'training' | 'sonstiges' | null;
+	/** @description Start date and time @required */
+	start_date: string;
+	/** @description End date and time (optional) */
+	end_date?: string | null;
+	location: {
+		/** @description Name of the location (e.g., "Koweg Main Hall") */
+		title?: string | null;
+		/** @description Link to the location (e.g., Google Maps URL) */
+		link?: string | null;
+	} | null;
+	/** @description Maximum number of participants/teams */
+	max_participants?: number | null;
+	/** @description Registration form (M2O to forms) */
+	registration_form?: Form | string | null;
+	/** @description Related department */
+	related_department?: string | null;
+	/** @description Related team */
+	related_team?: string | null;
+	/** @description Publication status */
+	status?: 'draft' | 'published' | null;
+	sort?: number | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	date_updated?: string | null;
+	user_updated?: DirectusUser | string | null;
+}
+
 export interface Globals {
 	/** @description Site summary for search results. */
 	description?: string | null;
@@ -948,6 +990,7 @@ export interface Schema {
 	block_pricing: BlockPricing[];
 	block_pricing_cards: BlockPricingCard[];
 	block_richtext: BlockRichtext[];
+	events: Event[];
 	form_fields: FormField[];
 	forms: Form[];
 	form_submissions: FormSubmission[];
@@ -1000,6 +1043,7 @@ export enum CollectionNames {
 	block_pricing = 'block_pricing',
 	block_pricing_cards = 'block_pricing_cards',
 	block_richtext = 'block_richtext',
+	events = 'events',
 	form_fields = 'form_fields',
 	forms = 'forms',
 	form_submissions = 'form_submissions',

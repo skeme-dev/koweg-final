@@ -20,8 +20,6 @@
 
     const teams = $derived(data.items);
 
-    console.log("related teams", teams);
-    
  </script>
 
  {#if teams.length > 0}

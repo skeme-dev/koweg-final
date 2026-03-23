@@ -19,6 +19,8 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 const fetchRetry = async (fetch: Function, count: number, ...args: any[]) => {
 	const response = await fetch(...args);
 
+	console.log(`Fetch attempt ${count + 1}:`, response);
+
 	if (count > 2 || response.status !== 429) return response;
 
 	console.warn(`[429] Too Many Requests (Attempt ${count + 1})`);

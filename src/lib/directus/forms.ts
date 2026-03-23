@@ -52,6 +52,8 @@ export const submitForm = async (
 			values: submissionValues
 		};
 
+
+
 		await directus.request(withToken(TOKEN, createItem('form_submissions', payload)));
 	} catch (error) {
 		console.error('Error submitting form:', error);

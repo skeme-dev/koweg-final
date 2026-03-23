@@ -13,8 +13,15 @@ export const GET: RequestHandler = async ({ request, fetch }) => {
 	const { getDirectus, readItems } = useDirectus();
 	const directus = getDirectus(fetch);
 
+	const typeLabels: Record<string, string> = {
+		turnier: 'Turnier',
+		veranstaltung: 'Veranstaltung',
+		training: 'Training',
+		sonstiges: 'Sonstiges'
+	};
+
 	try {
-		const [pages, posts] = await Promise.all([
+		const [pages, posts, events] = await Promise.all([
 			directus.request(
 				readItems('pages', {
 					filter: {
@@ -44,6 +51,25 @@ export const GET: RequestHandler = async ({ request, fetch }) => {
 					},
 					fields: ['id', 'title', 'description', 'slug', 'content', 'status']
 				})
+			),
+
+			directus.request(
+				readItems('events', {
+					filter: {
+						_and: [
+							{ status: { _eq: 'published' } },
+							{
+								_or: [
+									{ title: { _contains: search } },
+									{ description: { _contains: search } },
+									{ slug: { _contains: search } },
+									{ location_title: { _contains: search } }
+								]
+							}
+						]
+					},
+					fields: ['id', 'title', 'description', 'slug', 'type']
+				})
 			)
 		]);
 
@@ -61,6 +87,15 @@ export const GET: RequestHandler = async ({ request, fetch }) => {
 				description: post.description,
 				type: 'Post',
 				link: `/blog/${post.slug}`
+			})),
+
+			...events.map((event: any) => ({
+				id: event.id,
+				title: event.title,
+				description: event.description,
+				type: 'Event',
+				subtype: event.type ? (typeLabels[event.type] ?? event.type) : undefined,
+				link: `/events/${event.slug}`
 			}))
 		];
 
