@@ -21,5 +21,8 @@ RUN npm run build
 # Port, den SvelteKit verwendet
 EXPOSE 3000
 
-# App starten im Preview-Modus (du kannst auch npm run start verwenden bei node-adapter)
-CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "3000"]
+ENV HOST=0.0.0.0
+ENV PORT=3000
+
+# adapter-node Build starten
+CMD ["node", "build"]
