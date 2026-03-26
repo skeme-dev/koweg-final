@@ -23,10 +23,10 @@
 	<div class="relative flex h-full w-full items-center">
 		<div class="mx-auto max-w-7xl p-4 sm:px-6 lg:px-16">
 			<h1 class="text-4xl font-bold text-white md:text-6xl">
-				Container-ausgerichtete Hero Headline
+				SV Koweg e.V. - Sport verbindet uns!
 			</h1>
 			<p class="mt-4 text-lg text-white/90">
-				Der Text bleibt im Layout, während das Bild über die gesamte Seite gezogen wird.
+				Willkommen beim SV Koweg e.V., Ihrem Partner für Sport und Gemeinschaft. Entdecken Sie unsere Teams, Abteilungen und Veranstaltungen für jedes Alter und erfahren Sie mehr über unsere Werte und unsere Arbeit für den Sport in der Region.
 			</p>
 		</div>
 	</div>
