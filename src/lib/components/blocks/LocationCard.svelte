@@ -24,7 +24,7 @@
 			<div class="text-2xl font-bold">{location.title}</div>
 			<div class="my-3 text-sm font-medium">{@html sanitizeHtml(location.description)}</div>
 			<div class="">
-				<a class="font-semibold" href={location.link}>Link zur Sportstätte</a>
+				<a class="font-semibold" href={location.link} target="_blank">Link zur Sportstätte</a>
 			</div>
 		</div>
 

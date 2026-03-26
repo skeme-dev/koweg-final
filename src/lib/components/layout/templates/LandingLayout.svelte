@@ -1,5 +1,6 @@
 <script>
 	import { page } from '$app/state';
+	import { getDirectusAssetURL } from '$lib/directus/directus-utils';
 
 	let { children } = $props();
 
@@ -11,7 +12,7 @@
 >
 	<!-- Hero Image -->
 	<img
-		src="https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1950&q=80"
+		src={getDirectusAssetURL("04a26447-8ef3-4abe-b7a9-d4c8471ac2f7")}
 		alt="Hero"
 		class="absolute inset-0 h-full w-full object-cover"
 	/>

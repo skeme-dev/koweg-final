@@ -15,6 +15,8 @@
 				typeof block.collection === 'string' && !!block.item && typeof block.item === 'object'
 		)
 	);
+
+	$inspect('PageBuilder validBlocks', validBlocks);
 </script>
 
 {#each validBlocks as block}
