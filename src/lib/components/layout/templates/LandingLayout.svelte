@@ -2,7 +2,6 @@
 	import { page } from '$app/state';
 	import { getDirectusAssetURL } from '$lib/directus/directus-utils';
 
-
 	let { children } = $props();
 
 	const glob = $derived(page.data?.globals);
