@@ -14,6 +14,7 @@ export const load = (async (event) => {
 	}
 
 	return {
+		departmentId: department?.id,
 		departmentEvents
 	};
 }) satisfies PageServerLoad;

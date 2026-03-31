@@ -76,6 +76,9 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 				'description',
 				'slug',
 				{
+					hero_image: ['id']
+				},
+				{
 					leader: [
 						'first_name',
 						'last_name',
@@ -259,6 +262,23 @@ export const fetchPageData = async (
 									'link',
 									{
 										image: ['id']
+									}
+								],
+								block_person_gallery: [
+									{
+										related_person: [
+											{
+												related_user: [
+													'first_name',
+													'last_name',
+													'email',
+													'title',
+													{
+														avatar: ['id']
+													}
+												]
+											}
+										]
 									}
 								],
 								block_person_card: [

@@ -15,11 +15,14 @@
 		subpage: 'sub_page'
 	};
 
+	let dep = $derived.by(() => page.data?.departments.find((dept) => dept.slug === page.url.pathname.split('/')[2]));
+
 	let { children } = $props();
+
 </script>
 
 {#if page.data?.template != 'landing_page' && !page.url.pathname.startsWith('/blog/')}
-	<HeroImage image={page.data?.hero_image} />
+	<HeroImage image={page.data?.hero_image || dep?.hero_image} />
 {/if}
 
 {#if page.data.template == 'landing_page'}
