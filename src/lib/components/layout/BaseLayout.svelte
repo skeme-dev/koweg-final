@@ -15,7 +15,7 @@
 		subpage: 'sub_page'
 	};
 
-	let dep = $derived.by(() => page.data?.departments.find((dept) => dept.slug === page.url.pathname.split('/')[2]));
+	let dep = $derived.by(() => page.data?.departments?.find((dept) => dept.slug === page.url.pathname.split('/')[2]));
 
 	let { children } = $props();
 
