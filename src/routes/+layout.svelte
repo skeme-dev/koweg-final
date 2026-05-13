@@ -3,15 +3,18 @@
 	import '../fonts.css';
 	import NavigationBar from '$lib/components/layout/NavigationBar.svelte';
 	import Footer from '$lib/components/layout/Footer.svelte';
+	import AccessibilityWidget from '$lib/components/layout/AccessibilityWidget.svelte';
 	import { getDirectusAssetURL } from '$lib/directus/directus-utils';
 	import { page } from '$app/state';
 	import BaseLayout from '$lib/components/layout/BaseLayout.svelte';
+	import { onMount } from 'svelte';
 
 	let { children, data } = $props();
 
 	const siteTitle = $derived(data.globals?.title || 'SV Koweg e.V.');
 	const siteDescription = $derived(
-		page.data.globals?.description || 'A starter CMS template powered by Svelte and Directus.'
+		page.data.globals?.description ||
+			'Der SV Koweg e.V. ist ein Sportverein aus der Region, der sich dem Breitensport und der Gemeinschaft widmet.'
 	);
 	const logoURL = $derived(
 		data.globals?.logo ? getDirectusAssetURL(data.globals.logo) : '/images/logo.svg'
@@ -33,12 +36,15 @@
 	<link rel="icon" href={faviconURL} />
 </svelte:head>
 
+<a href="#main-content" class="a11y-skip-link">Zum Hauptinhalt springen</a>
+
 <div style="--accent-color: {safeAccentColor};">
 	<NavigationBar />
 	<BaseLayout>
-		<main class="flex-grow">
+		<main id="main-content" tabindex="-1" class="flex-grow">
 			{@render children()}
 		</main>
 	</BaseLayout>
 	<Footer />
+	<AccessibilityWidget />
 </div>

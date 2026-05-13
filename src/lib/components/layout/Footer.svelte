@@ -21,7 +21,7 @@
 	const mainSponsors = $derived(globals?.main_sponsors ?? []);
 </script>
 
-<footer class="bg-gray py-16 dark:bg-[var(--background-variant-color)]">
+<footer role="contentinfo" aria-label="Fußzeile" class="bg-gray py-16 dark:bg-[var(--background-variant-color)]">
 	<Container class="text-foreground">
 		<div class="space-y-6">
 			<Headline headline="Unsere Sponsoren" />
@@ -82,7 +82,7 @@
 			</div>
 
 			<div class="flex flex-1 flex-col items-start md:items-end">
-				<nav class="flex w-full space-x-24 text-left md:w-auto">
+				<nav aria-label="Fußzeilen-Navigation" class="flex w-full space-x-24 text-left md:w-auto">
 					<ul class="space-y-4">
 						{#if navPrimary?.items}
 							{#each navPrimary.items.filter((item) => {

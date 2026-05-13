@@ -6,6 +6,7 @@
 	import Headline from '$lib/components/ui/Headline.svelte';
 	import TrainingCard from '$lib/components/ui/TrainingCard.svelte';
 	import EventSection from '$lib/components/blocks/EventSection.svelte';
+	import DirectusImage from '$lib/components/shared/DirectusImage.svelte';
 
     let { data } = $props();
 
@@ -25,6 +26,19 @@
 </svelte:head>
 
 <div class="flex-grow space-y-10 mb-12 mt-6">
+	{#if team.image?.id}
+		<figure class="overflow-hidden rounded-xl shadow-md">
+			<DirectusImage
+				uuid={team.image.id}
+				alt={'Mannschaftsfoto ' + (team.title ?? '')}
+				width={1200}
+				height={675}
+				class="h-auto w-full object-cover aspect-[16/9]"
+				loading="eager"
+			/>
+		</figure>
+	{/if}
+
 	<div class="">
 		<RichText
 			data={{
