@@ -24,25 +24,25 @@
 
 </script>
 
-<header class="bg-background font-heading text-foreground sticky top-0 z-50 w-full">
+<header role="banner" class="bg-background font-heading text-foreground sticky top-0 z-50 w-full">
 	<Container class="flex items-center justify-between p-4">
-		<a href="/" class="flex-shrink-0">
+		<a href="/" class="flex-shrink-0" aria-label="Zur Startseite – SV Koweg e.V.">
 			<img
 				src={lightLogoUrl}
-				alt="Logo"
+				alt="SV Koweg e.V. – Startseite"
 				width="150"
 				height="100"
 				class="h-auto w-[100px] dark:hidden"
 			/>
 			<img
 				src={darkLogoUrl}
-				alt="Logo"
+				alt="SV Koweg e.V. – Startseite"
 				width="150"
 				height="100"
 				class="hidden h-auto w-[120px] dark:block"
 			/>
 		</a>
-		<nav class="flex items-center gap-4">
+		<nav aria-label="Hauptnavigation" class="flex items-center gap-4">
 			<!-- <SearchModal /> -->
 			<!-- <NavigationMenuItems /> -->
 			<div
