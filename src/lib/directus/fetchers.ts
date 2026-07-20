@@ -41,6 +41,7 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 			fields: [
 				'id',
 				'sort',
+				'status',
 				'title',
 				'slug',
 				'description',
@@ -116,6 +117,7 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 			sort: ['sort'],
 			fields: [
 				'id',
+				'status',
 				'title',
 				'description',
 				'slug',
@@ -137,6 +139,7 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 					teams: [
 						'id',
 						'sort',
+						'status',
 						'title',
 						'slug',
 						'description',

@@ -7,11 +7,13 @@
 	import TrainingCard from '$lib/components/ui/TrainingCard.svelte';
 	import EventSection from '$lib/components/blocks/EventSection.svelte';
 	import DirectusImage from '$lib/components/shared/DirectusImage.svelte';
+	import ComingSoon from '$lib/components/shared/ComingSoon.svelte';
 
     let { data } = $props();
 
     const team = $derived(data.teams.find((t) => t.slug === page.params.teamSlug) ?? {});
 	const teamEvents = $derived(data.teamEvents ?? []);
+	const isComingSoon = $derived(team.status === 'unpublished');
 
 </script>
 
@@ -26,6 +28,9 @@
 </svelte:head>
 
 <div class="flex-grow space-y-10 mb-12 mt-6">
+	{#if isComingSoon}
+		<ComingSoon kind="team" title={team.title} />
+	{:else}
 	{#if team.image?.id}
 		<figure class="overflow-hidden rounded-xl shadow-md">
 			<DirectusImage
@@ -84,5 +89,6 @@
 		<div class="space-y-3">
 			<Posts data={{ headline: "Aktuelle Beiträge", posts: team.related_posts, limit: 3 }} />
 		</div>
+	{/if}
 	{/if}
 </div>

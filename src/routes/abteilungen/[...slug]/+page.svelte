@@ -6,6 +6,7 @@
 	import TeamGallery from '$lib/components/blocks/TeamGallery.svelte';
 	import EventSection from '$lib/components/blocks/EventSection.svelte';
 	import Headline from '$lib/components/ui/Headline.svelte';
+	import ComingSoon from '$lib/components/shared/ComingSoon.svelte';
 	import { sortBySortField } from '$lib/utils';
 
 	const currentSlug = $derived(page.url.pathname.split('/')[2]);
@@ -13,6 +14,7 @@
 		return page.data.departments.find((dept) => dept.slug === currentSlug);
 	});
 
+	const isComingSoon = $derived(department?.status === 'unpublished');
 	const leader = $derived(department?.leader ?? []);
 	const teams = $derived(sortBySortField(department?.teams ?? []));
 	const departmentEvents = $derived(page.data.departmentEvents ?? []);
@@ -29,6 +31,9 @@
 </svelte:head>
 
 <div class="flex-grow space-y-10 mb-12 mt-6" style="--page-hero-image-url: url(https://koweg.demo.skeme.dev/VGG.jpg)">
+	{#if isComingSoon}
+		<ComingSoon kind="department" title={department.title} />
+	{:else}
 	<div class="">
 		<RichText
 			data={{
@@ -70,5 +75,6 @@
 		<div class="space-y-3">
 			<Posts data={{ headline: "Aktuelle Beiträge", posts: department.related_posts, limit: 3 }} />
 		</div>
+	{/if}
 	{/if}
 </div>
