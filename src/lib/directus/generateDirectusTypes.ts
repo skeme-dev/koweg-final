@@ -1,7 +1,6 @@
-import { config } from 'dotenv';
 import { generateDirectusTypes } from 'directus-sdk-typegen';
 
-config();
+// .env wird über den --env-file-Flag in package.json geladen
 
 async function generateTypes() {
 	const directusUrl = process.env.PUBLIC_DIRECTUS_URL;
