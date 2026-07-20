@@ -1272,6 +1272,54 @@ collections:
       versioning: false
     schema:
       name: teams
+  - collection: teams_trainings
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: teams_trainings
+      color: null
+      display_template: null
+      group: null
+      hidden: true
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: teams_trainings
+  - collection: teams_trainings_1
+    meta:
+      accountability: all
+      archive_app_filter: true
+      archive_field: null
+      archive_value: null
+      collapse: open
+      collection: teams_trainings_1
+      color: null
+      display_template: null
+      group: null
+      hidden: true
+      icon: import_export
+      item_duplication_fields: null
+      note: null
+      preview_url: null
+      singleton: false
+      sort: null
+      sort_field: null
+      translations: null
+      unarchive_value: null
+      versioning: false
+    schema:
+      name: teams_trainings_1
   - collection: trainings
     meta:
       accountability: all
@@ -21364,7 +21412,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 12
+      sort: 11
       special: null
       translations:
         - language: de-DE
@@ -21404,8 +21452,8 @@ fields:
       note: null
       options: null
       readonly: false
-      required: true
-      sort: 14
+      required: false
+      sort: 13
       special:
         - file
       translations:
@@ -21447,7 +21495,7 @@ fields:
       options: null
       readonly: false
       required: false
-      sort: 18
+      sort: 17
       special: null
       translations: null
       validation: null
@@ -21487,7 +21535,7 @@ fields:
         sort: null
       readonly: false
       required: false
-      sort: 16
+      sort: 15
       special:
         - o2m
       translations:
@@ -21513,37 +21561,12 @@ fields:
         sort: null
       readonly: false
       required: false
-      sort: 13
+      sort: 12
       special:
         - o2m
       translations:
         - language: de-DE
           translation: Mitglieder
-      validation: null
-      validation_message: null
-      width: half
-  - collection: teams
-    field: trainings
-    type: alias
-    meta:
-      collection: teams
-      conditions: null
-      display: null
-      display_options: null
-      field: trainings
-      group: null
-      hidden: false
-      interface: list-o2m
-      note: null
-      options:
-        sort: null
-        template: '{{day}} - {{title}}'
-      readonly: false
-      required: false
-      sort: 17
-      special:
-        - o2m
-      translations: null
       validation: null
       validation_message: null
       width: half
@@ -21590,7 +21613,7 @@ fields:
         title: Spezifisiche Angaben
       readonly: false
       required: false
-      sort: 15
+      sort: 14
       special:
         - alias
         - no-data
@@ -21598,6 +21621,264 @@ fields:
       validation: null
       validation_message: null
       width: full
+  - collection: teams
+    field: trainings
+    type: alias
+    meta:
+      collection: teams
+      conditions: null
+      display: null
+      display_options: null
+      field: trainings
+      group: null
+      hidden: false
+      interface: list-m2m
+      note: null
+      options:
+        template: '{{trainings_id.title}} -> {{teams_id.title}}'
+      readonly: false
+      required: false
+      sort: 16
+      special:
+        - m2m
+      translations: null
+      validation: null
+      validation_message: null
+      width: half
+  - collection: teams_trainings
+    field: id
+    type: integer
+    meta:
+      collection: teams_trainings
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: teams_trainings
+      data_type: integer
+      default_value: nextval('teams_trainings_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: teams_trainings
+    field: teams_id
+    type: uuid
+    meta:
+      collection: teams_trainings
+      conditions: null
+      display: null
+      display_options: null
+      field: teams_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: teams_id
+      table: teams_trainings
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: teams
+      foreign_key_column: id
+  - collection: teams_trainings
+    field: trainings_id
+    type: uuid
+    meta:
+      collection: teams_trainings
+      conditions: null
+      display: null
+      display_options: null
+      field: trainings_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: trainings_id
+      table: teams_trainings
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: trainings
+      foreign_key_column: id
+  - collection: teams_trainings_1
+    field: id
+    type: integer
+    meta:
+      collection: teams_trainings_1
+      conditions: null
+      display: null
+      display_options: null
+      field: id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 1
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: id
+      table: teams_trainings_1
+      data_type: integer
+      default_value: nextval('teams_trainings_1_id_seq'::regclass)
+      max_length: null
+      numeric_precision: 32
+      numeric_scale: 0
+      is_nullable: false
+      is_unique: true
+      is_indexed: false
+      is_primary_key: true
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: true
+      foreign_key_table: null
+      foreign_key_column: null
+  - collection: teams_trainings_1
+    field: teams_id
+    type: uuid
+    meta:
+      collection: teams_trainings_1
+      conditions: null
+      display: null
+      display_options: null
+      field: teams_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 2
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: teams_id
+      table: teams_trainings_1
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: teams
+      foreign_key_column: id
+  - collection: teams_trainings_1
+    field: trainings_id
+    type: uuid
+    meta:
+      collection: teams_trainings_1
+      conditions: null
+      display: null
+      display_options: null
+      field: trainings_id
+      group: null
+      hidden: true
+      interface: null
+      note: null
+      options: null
+      readonly: false
+      required: false
+      sort: 3
+      special: null
+      translations: null
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: trainings_id
+      table: teams_trainings_1
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: trainings
+      foreign_key_column: id
   - collection: trainings
     field: id
     type: uuid
@@ -24900,13 +25181,97 @@ relations:
       one_collection_field: null
       one_deselect_action: nullify
       one_field: teams
-      sort_field: null
+      sort_field: sort
     schema:
       table: teams
       column: related_department
       foreign_key_table: departments
       foreign_key_column: id
       constraint_name: teams_related_department_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: teams_trainings
+    field: trainings_id
+    related_collection: trainings
+    meta:
+      junction_field: teams_id
+      many_collection: teams_trainings
+      many_field: trainings_id
+      one_allowed_collections: null
+      one_collection: trainings
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: teams_trainings
+      column: trainings_id
+      foreign_key_table: trainings
+      foreign_key_column: id
+      constraint_name: teams_trainings_trainings_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: teams_trainings
+    field: teams_id
+    related_collection: teams
+    meta:
+      junction_field: trainings_id
+      many_collection: teams_trainings
+      many_field: teams_id
+      one_allowed_collections: null
+      one_collection: teams
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: teams_trainings
+      column: teams_id
+      foreign_key_table: teams
+      foreign_key_column: id
+      constraint_name: teams_trainings_teams_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: teams_trainings_1
+    field: trainings_id
+    related_collection: trainings
+    meta:
+      junction_field: teams_id
+      many_collection: teams_trainings_1
+      many_field: trainings_id
+      one_allowed_collections: null
+      one_collection: trainings
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: teams_trainings_1
+      column: trainings_id
+      foreign_key_table: trainings
+      foreign_key_column: id
+      constraint_name: teams_trainings_1_trainings_id_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: teams_trainings_1
+    field: teams_id
+    related_collection: teams
+    meta:
+      junction_field: trainings_id
+      many_collection: teams_trainings_1
+      many_field: teams_id
+      one_allowed_collections: null
+      one_collection: teams
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: trainings
+      sort_field: null
+    schema:
+      table: teams_trainings_1
+      column: teams_id
+      foreign_key_table: teams
+      foreign_key_column: id
+      constraint_name: teams_trainings_1_teams_id_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: trainings
@@ -24962,8 +25327,8 @@ relations:
       one_collection: teams
       one_collection_field: null
       one_deselect_action: nullify
-      one_field: trainings
-      sort_field: null
+      one_field: null
+      sort_field: sort
     schema:
       table: trainings
       column: related_team

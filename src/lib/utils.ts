@@ -7,6 +7,14 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs));
 }
 
+/**
+ * Sortiert eine Liste nach dem Directus-`sort`-Feld (aufsteigend).
+ * Einträge ohne Wert landen am Ende, die Reihenfolge ist stabil.
+ */
+export function sortBySortField<T extends { sort?: number | null }>(items: readonly T[]): T[] {
+	return [...items].sort((a, b) => (a?.sort ?? Infinity) - (b?.sort ?? Infinity));
+}
+
 type FlyAndScaleParams = {
 	y?: number;
 	x?: number;

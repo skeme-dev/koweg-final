@@ -6,6 +6,7 @@
 	import TeamGallery from '$lib/components/blocks/TeamGallery.svelte';
 	import EventSection from '$lib/components/blocks/EventSection.svelte';
 	import Headline from '$lib/components/ui/Headline.svelte';
+	import { sortBySortField } from '$lib/utils';
 
 	const currentSlug = $derived(page.url.pathname.split('/')[2]);
 	const department = $derived.by(() => {
@@ -13,6 +14,7 @@
 	});
 
 	const leader = $derived(department?.leader ?? []);
+	const teams = $derived(sortBySortField(department?.teams ?? []));
 	const departmentEvents = $derived(page.data.departmentEvents ?? []);
 </script>
 
@@ -50,10 +52,10 @@
 		</div>
 	{/if}
 
-	{#if department.teams?.length > 0}
+	{#if teams.length > 0}
 		<div class="space-y-3">
 			<Headline as="h3" headline="Unsere Mannschaften" />
-			<TeamGallery data={{items: department.teams, departmentSlug: department.slug}} />
+			<TeamGallery data={{items: teams, departmentSlug: department.slug}} />
 		</div>
 	{/if}
 

@@ -1,30 +1,31 @@
+
 export interface ExtensionSeoMetadata {
-	title?: string;
-	meta_description?: string;
-	og_image?: string;
-	additional_fields?: Record<string, unknown>;
-	sitemap?: {
-		change_frequency: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-		priority: string;
-	};
-	no_index?: boolean;
-	no_follow?: boolean;
+    title?: string;
+    meta_description?: string;
+    og_image?: string;
+    additional_fields?: Record<string, unknown>;
+    sitemap?: {
+        change_frequency: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
+        priority: string;
+    };
+    no_index?: boolean;
+    no_follow?: boolean;
 }
 
 export interface AiPrompt {
 	/** @primaryKey */
 	id: string;
+	sort?: number | null;
 	/** @description Unique name for the prompt. Use names like "create-article" or "generate-product-description". @required */
 	name: string;
-	/** @description Briefly explain what this prompt does in 1-2 sentences. */
-	description?: string | null;
-	/** @description Instructions that shape how the AI responds. */
-	system_prompt?: string | null;
-	/** @description Optional: Define the conversation structure between users and AI. Used to add context and improve outputs. */
-	messages?: Array<{ role: 'user' | 'assistant'; text: string }> | null;
-	sort?: number | null;
 	/** @description Is this prompt published and available to use? */
 	status?: 'draft' | 'in_review' | 'published';
+	/** @description Briefly explain what this prompt does in 1-2 sentences. */
+	description?: string | null;
+	/** @description Optional: Define the conversation structure between users and AI. Used to add context and improve outputs. */
+	messages?: Array<{ role: 'user' | 'assistant'; text: string }> | null;
+	/** @description Instructions that shape how the AI responds. */
+	system_prompt?: string | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
@@ -65,6 +66,19 @@ export interface BlockButtonGroup {
 	user_updated?: DirectusUser | string | null;
 	/** @description Add individual buttons to the button group. */
 	buttons?: BlockButton[] | string[];
+}
+
+export interface BlockFileCard {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	file: DirectusFile | string;
 }
 
 export interface BlockForm {
@@ -109,6 +123,7 @@ export interface BlockGalleryItem {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	sponsor?: Sponsor | string | null;
 }
 
 export interface BlockHero {
@@ -130,6 +145,73 @@ export interface BlockHero {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+}
+
+export interface BlockLocationCard {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	title: string;
+	/** @required */
+	description: string;
+	/** @required */
+	link: string;
+	/** @required */
+	image: DirectusFile | string;
+}
+
+export interface BlockOpeningTime {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	openings?: BlockOpeningTimesItem[] | string[];
+}
+
+export interface BlockOpeningTimesItem {
+	/** @primaryKey */
+	id: string;
+	sort?: number | null;
+	/** @required */
+	label: string;
+	/** @required */
+	value: string;
+	related_opening?: BlockOpeningTime | string | null;
+}
+
+export interface BlockPersonCard {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	person: DirectusUser | string;
+	related_person_gallery?: BlockPersonGallery | string | null;
+}
+
+export interface BlockPersonGallery {
+	/** @primaryKey */
+	id: number;
+	sort?: number | null;
+	related_person?: BlockPersonGalleryItem[] | string[];
+}
+
+export interface BlockPersonGalleryItem {
+	/** @primaryKey */
+	id: number;
+	sort?: number | null;
+	related_user?: DirectusUser | string | null;
+	related_person_card_gallery?: BlockPersonGallery | string | null;
 }
 
 export interface BlockPost {
@@ -206,22 +288,148 @@ export interface BlockRichtext {
 	user_updated?: DirectusUser | string | null;
 }
 
+export interface BlockSponsorGallery {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	title?: string | null;
+	items?: BlockSponsorGalleryItem[] | string[];
+}
+
+export interface BlockSponsorGalleryItem {
+	/** @primaryKey */
+	id: string;
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	sponsor?: Sponsor | string | null;
+	sponsor_gallery?: BlockSponsorGallery | string | null;
+}
+
+export interface BlockTeamCard {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	team: Team | string;
+	related_team?: BlockTeamGallery | string | null;
+}
+
+export interface BlockTeamGallery {
+	/** @primaryKey */
+	id: string;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	items?: BlockTeamCard[] | string[];
+}
+
+export interface BlockTimeline {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	timeline_items?: BlockTimelineItem[] | string[];
+}
+
+export interface BlockTimelineItem {
+	/** @primaryKey */
+	id: string;
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	title: string;
+	description?: string | null;
+	/** @required */
+	image: DirectusFile | string;
+	related_timeline?: BlockTimeline | string | null;
+}
+
+export interface Department {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	title: string;
+	/** @required */
+	description: string;
+	slug?: string | null;
+	hero_image?: DirectusFile | string | null;
+	/** @required */
+	leader: DirectusUser[] | string[];
+	/** @description Wähle Berichte aus, welche unter der Abteilungsseite sichtbar sein sollen. */
+	related_posts?: Post[] | string[];
+	teams?: Team[] | string[];
+}
+
+export interface Event {
+	/** @primaryKey */
+	id: number;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	title: string;
+	/** @required */
+	slug: string;
+	/** @required */
+	description: string;
+	/** @required */
+	content: string;
+	image?: DirectusFile | string | null;
+	type?: 'turnier' | 'veranstaltung' | 'training' | 'sonstiges' | null;
+	/** @required */
+	start_date: string;
+	end_date?: string | null;
+	location?: Location | string | null;
+	max_participants?: number | null;
+	registration_form?: Form | string | null;
+	related_department?: Department | string | null;
+	related_team?: Team | string | null;
+}
+
+export interface EventsBlock {
+	/** @primaryKey */
+	id: number;
+	item?: BlockRichtext | BlockFileCard | BlockLocationCard | BlockGallery | BlockPersonCard | BlockButton | string | null;
+	collection?: string | null;
+}
+
 export interface FormField {
 	/** @primaryKey */
 	id: string;
 	/** @description Unique field identifier, not shown to users (lowercase, hyphenated) */
 	name?: string | null;
 	/** @description Input type for the field */
-	type?:
-		| 'text'
-		| 'textarea'
-		| 'checkbox'
-		| 'checkbox_group'
-		| 'radio'
-		| 'file'
-		| 'select'
-		| 'hidden'
-		| null;
+	type?: 'text' | 'textarea' | 'checkbox' | 'checkbox_group' | 'radio' | 'file' | 'select' | 'hidden' | null;
 	/** @description Text label shown to form users. */
 	label?: string | null;
 	/** @description Default text shown in empty input. */
@@ -243,6 +451,31 @@ export interface FormField {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+}
+
+export interface FormSubmissionValue {
+	/** @primaryKey */
+	id: string;
+	/** @description Parent form submission for this value. */
+	form_submission?: FormSubmission | string | null;
+	field?: FormField | string | null;
+	/** @description The data entered by the user for this specific field in the form submission. */
+	value?: string | null;
+	sort?: number | null;
+	file?: DirectusFile | string | null;
+	/** @description Form submission date and time. */
+	timestamp?: string | null;
+}
+
+export interface FormSubmission {
+	/** @description Unique ID for this specific form submission @primaryKey */
+	id: string;
+	/** @description Form submission date and time. */
+	timestamp?: string | null;
+	/** @description Associated form for this submission. */
+	form?: Form | string | null;
+	/** @description Submitted field responses */
+	values?: FormSubmissionValue[] | string[];
 }
 
 export interface Form {
@@ -273,92 +506,11 @@ export interface Form {
 	submissions?: FormSubmission[] | string[];
 }
 
-export interface FormSubmission {
-	/** @description Unique ID for this specific form submission @primaryKey */
-	id: string;
-	/** @description Form submission date and time. */
-	timestamp?: string | null;
-	/** @description Associated form for this submission. */
-	form?: Form | string | null;
-	/** @description Submitted field responses */
-	values?: FormSubmissionValue[] | string[];
-}
-
-export interface FormSubmissionValue {
-	/** @primaryKey */
-	id: string;
-	/** @description Parent form submission for this value. */
-	form_submission?: FormSubmission | string | null;
-	field?: FormField | string | null;
-	/** @description The data entered by the user for this specific field in the form submission. */
-	value?: string | null;
-	sort?: number | null;
-	file?: DirectusFile | string | null;
-	/** @description Form submission date and time. */
-	timestamp?: string | null;
-}
-
-export interface Event {
-	/** @primaryKey */
-	id: string;
-	/** @description Event title @required */
-	title: string;
-	/** @description URL-friendly slug @required */
-	slug: string;
-	/** @description Short summary of the event */
-	description?: string | null;
-	/** @description Rich text content for the event detail page */
-	content?: string | null;
-	/** @description Featured image for the event */
-	image?: DirectusFile | string | null;
-	/** @description Type of event */
-	type?: 'turnier' | 'veranstaltung' | 'training' | 'sonstiges' | null;
-	/** @description Start date and time @required */
-	start_date: string;
-	/** @description End date and time (optional) */
-	end_date?: string | null;
-	location: {
-		/** @description Name of the location (e.g., "Koweg Main Hall") */
-		title?: string | null;
-		/** @description Link to the location (e.g., Google Maps URL) */
-		link?: string | null;
-	} | null;
-	/** @description Maximum number of participants/teams */
-	max_participants?: number | null;
-	/** @description Registration form (M2O to forms) */
-	registration_form?: Form | string | null;
-	/** @description Related department */
-	related_department?: string | null;
-	/** @description Related team */
-	related_team?: string | null;
-	/** @description Publication status */
-	status?: 'draft' | 'published' | null;
-	sort?: number | null;
-	date_created?: string | null;
-	user_created?: DirectusUser | string | null;
-	date_updated?: string | null;
-	user_updated?: DirectusUser | string | null;
-}
-
 export interface Globals {
-	/** @description Site summary for search results. */
-	description?: string | null;
 	/** @primaryKey */
 	id: string;
 	/** @description Social media profile URLs */
-	social_links?: Array<{
-		url: string;
-		service:
-			| 'facebook'
-			| 'instagram'
-			| 'linkedin'
-			| 'x'
-			| 'vimeo'
-			| 'youtube'
-			| 'github'
-			| 'discord'
-			| 'docker';
-	}> | null;
+	social_links?: Array<{ url: string; service: 'facebook' | 'instagram' | 'linkedin' | 'x' | 'vimeo' | 'youtube' | 'github' | 'discord' | 'docker' }> | null;
 	/** @description Short phrase describing the site. */
 	tagline?: string | null;
 	/** @description Main site title */
@@ -373,14 +525,40 @@ export interface Globals {
 	openai_api_key?: string | null;
 	/** @description The public URL for this Directus instance. Used in Flows. */
 	directus_url?: string | null;
-	/** @description Accent color for the website (used on buttons, links, etc). */
-	accent_color?: string | null;
 	/** @description Main logo shown on the site (for dark mode). */
 	logo_dark_mode?: DirectusFile | string | null;
+	/** @description Accent color for the website (used on buttons, links, etc). */
+	accent_color?: string | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	description?: string | null;
+	hero_image_text?: string | null;
+	about_text?: string | null;
+	/** @description Diese Sponsoren werden in der Fußleiste angezeigt */
+	main_sponsors?: Sponsor[] | string[];
+	shown_posts?: Post[] | string[];
+}
+
+export interface GlobalsFile {
+	/** @primaryKey */
+	id: number;
+	globals_id?: Global | string | null;
+	directus_files_id?: DirectusFile | string | null;
+}
+
+export interface Location {
+	/** @primaryKey */
+	id: number;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	date_updated?: string | null;
+	title?: string | null;
+	link?: string | null;
+	description?: string | null;
 }
 
 export interface Navigation {
@@ -403,7 +581,7 @@ export interface NavigationItem {
 	id: string;
 	/** @description Navigation menu that the individual links belong to. */
 	navigation?: Navigation | string | null;
-	/** @description The internal page to link to. */
+	/** @description Interne verlinkte Seite */
 	page?: Page | string | null;
 	/** @description The parent navigation item. */
 	parent?: NavigationItem | string | null;
@@ -411,15 +589,16 @@ export interface NavigationItem {
 	/** @description Label shown to the user for the menu item. @required */
 	title: string;
 	/** @description What type of link is this? Page and Post allow you to link to internal content. URL is for external content. Group can contain other menu items. */
-	type?: 'page' | 'post' | 'url' | 'group' | null;
-	/** @description The URL to link to. Could be relative (ie `/my-page`) or a full external URL (ie `https://docs.directus.io`) */
+	type?: 'page' | 'post' | 'url' | 'group' | 'Abteilung' | null;
+	/** @description Verlinkte URL. Kann relativ sein (z.B. `/meine-seite`) oder eine externe URL (z.B. `https://docs.directus.io`) */
 	url?: string | null;
-	/** @description The internal post to link to. */
+	/** @description Interner verlinkter Bericht. */
 	post?: Post | string | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	department?: Department | string | null;
 	/** @description Add child menu items within the group. */
 	children?: NavigationItem[] | string[];
 }
@@ -431,15 +610,7 @@ export interface PageBlock {
 	/** @description The id of the page that this block belongs to. */
 	page?: Page | string | null;
 	/** @description The data for the block. */
-	item?:
-		| BlockHero
-		| BlockRichtext
-		| BlockForm
-		| BlockPost
-		| BlockGallery
-		| BlockPricing
-		| string
-		| null;
+	item?: BlockRichtext | BlockForm | BlockPost | BlockGallery | BlockTimeline | BlockLocationCard | BlockPersonCard | BlockTeamCard | BlockSponsorGallery | BlockOpeningTime | BlockFileCard | BlockPersonGallery | string | null;
 	/** @description The collection (type of block). */
 	collection?: string | null;
 	/** @description Temporarily hide this block on the website without having to remove it from your page. */
@@ -456,11 +627,11 @@ export interface Page {
 	/** @primaryKey */
 	id: string;
 	sort?: number | null;
-	/** @description The title of this page. @required */
+	/** @description Der Titel der Seite. @required */
 	title: string;
-	/** @description Unique URL for this page (start with `/`, can have multiple segments `/about/me`)). @required */
+	/** @description Eindeutige URL für diese Seite (Beginne mit `/`, kann mehrere Teile haben `/ueber/mich`)). @required */
 	permalink: string;
-	/** @description Is this page published? */
+	/** @description In welcher Phase befindet sich diese Seite? */
 	status?: 'draft' | 'in_review' | 'published';
 	/** @description Publish now or schedule for later. */
 	published_at?: string | null;
@@ -469,35 +640,41 @@ export interface Page {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	template?: 'main_page' | 'sub_page' | 'landing_page' | null;
+	hero_image?: DirectusFile | string | null;
 	/** @description Create and arrange different content blocks (like text, images, or videos) to build your page. */
 	blocks?: PageBlock[] | string[];
 }
 
 export interface Post {
-	/** @description Rich text content of your blog post. */
+	/** @description Inhalt des Berichts */
 	content?: string | null;
 	/** @primaryKey */
 	id: string;
-	/** @description Featured image for this post. Used in cards linking to the post and in the post detail page. */
+	/** @description Hauptbild des Berichts */
 	image?: DirectusFile | string | null;
-	/** @description Unique URL for this post (e.g., `yoursite.com/posts/{{your-slug}}`) */
+	/** @description Eindeutige URL für diesen Bericht (z.B., `sv-koweg.de/posts/{{dein-slug}}`) */
 	slug?: string | null;
 	sort?: number | null;
 	/** @description Is this post published? */
 	status?: 'draft' | 'in_review' | 'published';
 	/** @description Title of the blog post (used in page title and meta tags) @required */
 	title: string;
-	/** @description Short summary of the blog post to entice readers. */
+	/** @description Kurze Zusammenfassung des Berichts. */
 	description?: string | null;
-	/** @description Select the team member who wrote this post */
 	author?: DirectusUser | string | null;
-	/** @description Publish now or schedule for later. */
+	/** @description Lege fest, wann dieser Bericht veröffentlicht werden soll. */
 	published_at?: string | null;
 	seo?: ExtensionSeoMetadata | null;
 	date_created?: string | null;
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+	/** @description Wähle eine Abteilung aus, welche dann dieser Bericht zugeordnet wird. */
+	related_department?: Department | string | null;
+	/** @description Wähle ein Team aus, welches der Bericht zugeordnet wird. */
+	related_team?: Team | string | null;
+	related_posts_landing?: Global | string | null;
 }
 
 export interface Redirect {
@@ -514,6 +691,82 @@ export interface Redirect {
 	user_created?: DirectusUser | string | null;
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
+}
+
+export interface Sponsor {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	type: 'main_sponsor' | 'normal_sponsor';
+	/** @required */
+	title: string;
+	/** @required */
+	link: string;
+	image?: DirectusFile | string | null;
+	main_sponsor?: Global | string | null;
+}
+
+export interface Team {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	/** @required */
+	title: string;
+	slug?: string | null;
+	description?: string | null;
+	image?: DirectusFile | string | null;
+	related_department?: Department | string | null;
+	members?: DirectusUser[] | string[];
+	related_posts?: Post[] | string[];
+	trainings?: TeamsTrainings1[] | string[];
+}
+
+export interface TeamsTraining {
+	/** @primaryKey */
+	id: number;
+	teams_id?: Team | string | null;
+	trainings_id?: Training | string | null;
+}
+
+export interface TeamsTrainings1 {
+	/** @primaryKey */
+	id: number;
+	teams_id?: Team | string | null;
+	trainings_id?: Training | string | null;
+}
+
+export interface Training {
+	/** @primaryKey */
+	id: string;
+	status?: 'published' | 'draft' | 'archived';
+	sort?: number | null;
+	user_created?: DirectusUser | string | null;
+	date_created?: string | null;
+	user_updated?: DirectusUser | string | null;
+	date_updated?: string | null;
+	related_team?: Team | string | null;
+	/** @required */
+	day: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
+	/** @required */
+	location: BlockLocationCard | string;
+	max_age?: number | null;
+	min_age?: number | null;
+	/** @required */
+	start: string;
+	/** @required */
+	end: string;
+	title?: string | null;
 }
 
 export interface DirectusAccess {
@@ -547,12 +800,7 @@ export interface DirectusCollection {
 	display_template?: string | null;
 	hidden?: boolean;
 	singleton?: boolean;
-	translations?: Array<{
-		language: string;
-		translation: string;
-		singular: string;
-		plural: string;
-	}> | null;
+	translations?: Array<{ language: string; translation: string; singular: string; plural: string }> | null;
 	archive_field?: string | null;
 	archive_app_filter?: boolean;
 	archive_value?: string | null;
@@ -754,31 +1002,12 @@ export interface DirectusSettings {
 	public_background?: DirectusFile | string | null;
 	public_note?: string | null;
 	auth_login_attempts?: number | null;
-	auth_password_policy?:
-		| null
-		| `/^.{8,}$/`
-		| `/(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{';'?>.<,])(?!.*\\s).*$/`
-		| null;
+	auth_password_policy?: null | `/^.{8,}$/` | `/(?=^.{8,}$)(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+}{';'?>.<,])(?!.*\\s).*$/` | null;
 	storage_asset_transform?: 'all' | 'none' | 'presets' | null;
-	storage_asset_presets?: Array<{
-		key: string;
-		fit: 'contain' | 'cover' | 'inside' | 'outside';
-		width: number;
-		height: number;
-		quality: number;
-		withoutEnlargement: boolean;
-		format: 'auto' | 'jpeg' | 'png' | 'webp' | 'tiff' | 'avif';
-		transforms: 'json';
-	}> | null;
+	storage_asset_presets?: Array<{ key: string; fit: 'contain' | 'cover' | 'inside' | 'outside'; width: number; height: number; quality: number; withoutEnlargement: boolean; format: 'auto' | 'jpeg' | 'png' | 'webp' | 'tiff' | 'avif'; transforms: 'json' }> | null;
 	custom_css?: string | null;
 	storage_default_folder?: DirectusFolder | string | null;
-	basemaps?: Array<{
-		name: string;
-		type: 'raster' | 'tile' | 'style';
-		url: string;
-		tileSize: number;
-		attribution: string;
-	}> | null;
+	basemaps?: Array<{ name: string; type: 'raster' | 'tile' | 'style'; url: string; tileSize: number; attribution: string }> | null;
 	mapbox_key?: string | null;
 	module_bar?: 'json' | null;
 	project_descriptor?: string | null;
@@ -797,9 +1026,16 @@ export interface DirectusSettings {
 	public_registration_verify_email?: boolean;
 	public_registration_role?: DirectusRole | string | null;
 	public_registration_email_filter?: 'json' | null;
+	visual_editor_urls?: Array<{ url: string }> | null;
+	accepted_terms?: boolean | null;
+	project_id?: string | null;
+	mcp_enabled?: boolean;
+	mcp_allow_deletes?: boolean;
+	mcp_prompts_collection?: string | null;
+	mcp_system_prompt_enabled?: boolean;
+	mcp_system_prompt?: string | null;
 	/** @description Settings for the Command Palette Module. */
 	command_palette_settings?: Record<string, any> | null;
-	visual_editor_urls?: Array<{ url: string }> | null;
 }
 
 export interface DirectusUser {
@@ -830,6 +1066,9 @@ export interface DirectusUser {
 	theme_light?: string | null;
 	theme_light_overrides?: 'json' | null;
 	theme_dark_overrides?: 'json' | null;
+	text_direction?: 'auto' | 'ltr' | 'rtl';
+	related_department?: Department | string | null;
+	related_team?: Team | string | null;
 	/** @description Blog posts this user has authored. */
 	posts?: Post[] | string[];
 	policies?: DirectusAccess[] | string[];
@@ -982,26 +1221,48 @@ export interface Schema {
 	ai_prompts: AiPrompt[];
 	block_button: BlockButton[];
 	block_button_group: BlockButtonGroup[];
+	block_file_card: BlockFileCard[];
 	block_form: BlockForm[];
 	block_gallery: BlockGallery[];
 	block_gallery_items: BlockGalleryItem[];
 	block_hero: BlockHero[];
+	block_location_card: BlockLocationCard[];
+	block_opening_time: BlockOpeningTime[];
+	block_opening_times_items: BlockOpeningTimesItem[];
+	block_person_card: BlockPersonCard[];
+	block_person_gallery: BlockPersonGallery[];
+	block_person_gallery_items: BlockPersonGalleryItem[];
 	block_posts: BlockPost[];
 	block_pricing: BlockPricing[];
 	block_pricing_cards: BlockPricingCard[];
 	block_richtext: BlockRichtext[];
+	block_sponsor_gallery: BlockSponsorGallery[];
+	block_sponsor_gallery_items: BlockSponsorGalleryItem[];
+	block_team_card: BlockTeamCard[];
+	block_team_gallery: BlockTeamGallery[];
+	block_timeline: BlockTimeline[];
+	block_timeline_items: BlockTimelineItem[];
+	departments: Department[];
 	events: Event[];
+	events_blocks: EventsBlock[];
 	form_fields: FormField[];
-	forms: Form[];
-	form_submissions: FormSubmission[];
 	form_submission_values: FormSubmissionValue[];
+	form_submissions: FormSubmission[];
+	forms: Form[];
 	globals: Globals;
+	globals_files: GlobalsFile[];
+	locations: Location[];
 	navigation: Navigation[];
 	navigation_items: NavigationItem[];
 	page_blocks: PageBlock[];
 	pages: Page[];
 	posts: Post[];
 	redirects: Redirect[];
+	sponsors: Sponsor[];
+	teams: Team[];
+	teams_trainings: TeamsTraining[];
+	teams_trainings_1: TeamsTrainings1[];
+	trainings: Training[];
 	directus_access: DirectusAccess[];
 	directus_activity: DirectusActivity[];
 	directus_collections: DirectusCollection[];
@@ -1035,26 +1296,48 @@ export enum CollectionNames {
 	ai_prompts = 'ai_prompts',
 	block_button = 'block_button',
 	block_button_group = 'block_button_group',
+	block_file_card = 'block_file_card',
 	block_form = 'block_form',
 	block_gallery = 'block_gallery',
 	block_gallery_items = 'block_gallery_items',
 	block_hero = 'block_hero',
+	block_location_card = 'block_location_card',
+	block_opening_time = 'block_opening_time',
+	block_opening_times_items = 'block_opening_times_items',
+	block_person_card = 'block_person_card',
+	block_person_gallery = 'block_person_gallery',
+	block_person_gallery_items = 'block_person_gallery_items',
 	block_posts = 'block_posts',
 	block_pricing = 'block_pricing',
 	block_pricing_cards = 'block_pricing_cards',
 	block_richtext = 'block_richtext',
+	block_sponsor_gallery = 'block_sponsor_gallery',
+	block_sponsor_gallery_items = 'block_sponsor_gallery_items',
+	block_team_card = 'block_team_card',
+	block_team_gallery = 'block_team_gallery',
+	block_timeline = 'block_timeline',
+	block_timeline_items = 'block_timeline_items',
+	departments = 'departments',
 	events = 'events',
+	events_blocks = 'events_blocks',
 	form_fields = 'form_fields',
-	forms = 'forms',
-	form_submissions = 'form_submissions',
 	form_submission_values = 'form_submission_values',
+	form_submissions = 'form_submissions',
+	forms = 'forms',
 	globals = 'globals',
+	globals_files = 'globals_files',
+	locations = 'locations',
 	navigation = 'navigation',
 	navigation_items = 'navigation_items',
 	page_blocks = 'page_blocks',
 	pages = 'pages',
 	posts = 'posts',
 	redirects = 'redirects',
+	sponsors = 'sponsors',
+	teams = 'teams',
+	teams_trainings = 'teams_trainings',
+	teams_trainings_1 = 'teams_trainings_1',
+	trainings = 'trainings',
 	directus_access = 'directus_access',
 	directus_activity = 'directus_activity',
 	directus_collections = 'directus_collections',

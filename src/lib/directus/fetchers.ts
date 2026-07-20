@@ -4,6 +4,32 @@ import { type BlockPost, type PageBlock, type Post, type Schema } from '../types
 import { useDirectus } from './directus';
 import { type QueryFilter, aggregate, readItem, readSingleton } from '@directus/sdk';
 
+/**
+ * Deep-Queries, deren Syntax das SDK-Typing nicht kennt (Punkt-Notation über eine
+ * Junction, `item:<collection>` für M2A). Beide sind zur Laufzeit gültig.
+ */
+const teamsDeep = {
+	related_posts: { _sort: ['sort', '-published_at'] },
+	// sortiert die Junction-Zeilen nach den Feldern des verknüpften Trainings
+	trainings: { _sort: ['trainings_id.sort', 'trainings_id.day'] }
+} as any;
+
+const blocksDeep = {
+	blocks: {
+		_sort: ['sort'],
+		_filter: { hide_block: { _neq: true } },
+		'item:block_gallery': { items: { _sort: ['sort'] } },
+		'item:block_pricing': { pricing_cards: { _sort: ['sort'] } },
+		'item:block_hero': { button_group: { buttons: { _sort: ['sort'] } } },
+		'item:block_form': { form: { fields: { _sort: ['sort'] } } },
+		'item:block_timeline': { timeline_items: { _sort: ['sort'] } },
+		'item:block_person_gallery': { related_person: { _sort: ['sort'] } },
+		'item:block_sponsor_gallery': { items: { _sort: ['sort'] } },
+		'item:block_team_gallery': { items: { _sort: ['sort'] } },
+		'item:block_opening_time': { openings: { _sort: ['sort'] } }
+	}
+} as any;
+
 export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 	const { getDirectus, readItems } = useDirectus();
 
@@ -11,8 +37,10 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 
 	const teamsData = await directus.request(
 		readItems('teams', {
+			sort: ['sort'],
 			fields: [
 				'id',
+				'sort',
 				'title',
 				'slug',
 				'description',
@@ -44,23 +72,38 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 					]
 				},
 				{
+					// M2M über die Junction teams_trainings_1
 					trainings: [
-						'title',
-						'day',
 						{
-							location: ['title', 'link']
-						},
-						'min_age',
-						'max_age',
-						'start',
-						'end'
+							trainings_id: [
+								'id',
+								'sort',
+								'title',
+								'day',
+								{
+									location: ['title', 'link']
+								},
+								'min_age',
+								'max_age',
+								'start',
+								'end'
+							]
+						}
 					]
 				}
-			]
+			],
+			deep: teamsDeep
 		})
 	);
 
-	return teamsData;
+	// Junction-Zeilen auf die Trainings selbst reduzieren, damit die Komponenten
+	// weiterhin eine flache Liste (team.trainings[]) bekommen
+	return teamsData.map((team: any) => ({
+		...team,
+		trainings: (team.trainings ?? [])
+			.map((entry: any) => entry?.trainings_id)
+			.filter(Boolean)
+	}));
 };
 
 export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
@@ -70,6 +113,7 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 
 	const departmentsData = await directus.request(
 		readItems('departments', {
+			sort: ['sort'],
 			fields: [
 				'id',
 				'title',
@@ -91,6 +135,8 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 				},
 				{
 					teams: [
+						'id',
+						'sort',
 						'title',
 						'slug',
 						'description',
@@ -110,7 +156,11 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 						}
 					]
 				}
-			]
+			],
+			deep: {
+				teams: { _sort: ['sort'] },
+				related_posts: { _sort: ['sort', '-published_at'] }
+			}
 		})
 	);
 	return departmentsData;
@@ -350,9 +400,7 @@ export const fetchPageData = async (
 					]
 				}
 			],
-			deep: {
-				blocks: { _sort: ['sort'], _filter: { hide_block: { _neq: true } } }
-			}
+			deep: blocksDeep
 		})
 	);
 
@@ -426,7 +474,11 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 								}
 							]
 						}
-					]
+					],
+					deep: {
+						main_sponsors: { _sort: ['sort'] },
+						shown_posts: { _sort: ['sort', '-published_at'] }
+					}
 				})
 			),
 			directus.request(
@@ -450,7 +502,7 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 							]
 						}
 					],
-					deep: { items: { _sort: ['sort'] } }
+					deep: { items: { _sort: ['sort'], children: { _sort: ['sort'] } } }
 				})
 			),
 			directus.request(
@@ -468,7 +520,8 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 								}
 							]
 						}
-					]
+					],
+					deep: { items: { _sort: ['sort'], children: { _sort: ['sort'] } } }
 				})
 			)
 		]);
@@ -563,6 +616,7 @@ export const fetchRelatedPosts = async (
 					id: { _neq: excludeId }
 				},
 				fields: ['id', 'title', 'image', 'slug'],
+				sort: ['sort', '-published_at'],
 				limit: 2
 			})
 		);
@@ -746,7 +800,8 @@ export const fetchEventBySlug = async (slug: string, fetch: RequestEvent['fetch'
 							}
 						]
 					}
-				]
+				],
+				deep: { registration_form: { fields: { _sort: ['sort'] } } }
 			})
 		);
 
