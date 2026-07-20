@@ -3,7 +3,7 @@
 	import { ChevronDown } from '@lucide/svelte';
 	import * as Collapsible from '../ui/collapsible/';
 	import { slide } from 'svelte/transition';
-	import { cn } from '$lib/utils';
+	import { cn, sortBySortField } from '$lib/utils';
 
 	const navigation = $derived(page.data.headerNavigation);
 	const departments = $derived(page.data.departments ?? []);
@@ -74,12 +74,13 @@
 	}
 
 	/**
-	 * Findet die Teams einer Abteilung über die departments-Daten
+	 * Findet die Teams einer Abteilung über die departments-Daten,
+	 * sortiert nach dem Directus-`sort`-Feld
 	 */
 	function getTeams(child: any): any[] {
 		if (!child.department?.id) return [];
 		const dep = departments.find((d: any) => d.id === child.department.id);
-		return dep?.teams ?? [];
+		return sortBySortField(dep?.teams ?? []);
 	}
 
 </script>
