@@ -35,8 +35,8 @@
 	<div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
 		{#each sponsors as sponsorItem}
 		<div class="flex justify-center items-center p-3 hover:bg-[#eee] transition-all duration-200">
-			<a href={sponsorItem.sponsor.link} class="max-h-64 flex">
-				<DirectusImage uuid={sponsorItem.sponsor.image.id} alt={sponsorItem.sponsor.title} height={200} />
+			<a href={sponsorItem.sponsor?.link} class="max-h-64 flex">
+				<DirectusImage uuid={sponsorItem.sponsor?.image?.id} alt={sponsorItem.sponsor?.title} height={200} />
 			</a>
 			</div>
 		{/each}

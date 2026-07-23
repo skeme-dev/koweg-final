@@ -7,7 +7,6 @@
 	import { getDirectusAssetURL } from '$lib/directus/directus-utils';
 	import { page } from '$app/state';
 	import BaseLayout from '$lib/components/layout/BaseLayout.svelte';
-	import { onMount } from 'svelte';
 
 	let { children, data } = $props();
 

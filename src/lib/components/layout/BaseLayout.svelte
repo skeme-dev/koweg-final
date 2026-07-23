@@ -1,9 +1,7 @@
 <script lang>
 	import { page } from '$app/state';
-	import Breadcrumb from '../ui/breadcrumb/breadcrumb.svelte';
 	import Container from '../ui/Container.svelte';
 	import HeroImage from './HeroImage.svelte';
-	import NavigationBar from './NavigationBar.svelte';
 	import PageBreadcrumb from './PageBreadcrumb.svelte';
 	import LandingLayout from './templates/LandingLayout.svelte';
 	import MainLayout from './templates/MainLayout.svelte';
@@ -35,7 +33,7 @@
 			<PageBreadcrumb />
 		{/if}
 
-		{#if page.data.template == templateNames.main}
+		{#if page.data.template == templateNames.main || page.url.pathname.startsWith('/blog')}
 			<MainLayout>
 				{@render children()}
 			</MainLayout>

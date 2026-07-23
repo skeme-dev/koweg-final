@@ -53,7 +53,7 @@
 	/>
 	<Separator class="mb-8" />
 
-	<div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,_2fr)_400px]">
+	<div class="grid grid-cols-1 gap-12">
 		<main class="text-left">
 			<BaseText
 				content={post.content || ''}
@@ -66,7 +66,7 @@
 			/>
 		</main>
 
-		<aside class="h-fit max-w-[496px] space-y-6 rounded-lg bg-background-muted p-6">
+		<aside class="h-fit w-full space-y-6 rounded-lg bg-background-muted p-6">
 			{#if author}
 				<div
 					class="flex items-center space-x-4"
