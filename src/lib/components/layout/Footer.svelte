@@ -89,8 +89,8 @@
 								return item.children.length === 0;
 							}) as item}
 								<li>
-									{#if item.children && item.page}
-										<a href={item.page.permalink} class="text-nav font-medium hover:underline">
+									{#if item.children || item.page}
+										<a href={item.page?.permalink || item?.url || '#'} class="text-nav font-medium hover:underline">
 											{item.title}
 										</a>
 									{:else}
@@ -112,8 +112,8 @@
 							{#if group.children?.length > 0}
 								{#each group.children as item}
 									<li>
-										{#if item.children && item.page}
-											<a href={item.page.permalink} class="text-nav font-medium hover:underline">
+										{#if item.children || item.page}
+											<a href={item.page?.permalink || item?.url || '#'} class="text-nav font-medium hover:underline">
 												{item.title}
 											</a>
 										{:else}

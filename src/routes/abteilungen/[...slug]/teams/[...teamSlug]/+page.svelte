@@ -14,7 +14,6 @@
     const team = $derived(data.teams.find((t) => t.slug === page.params.teamSlug) ?? {});
 	const teamEvents = $derived(data.teamEvents ?? []);
 	const isComingSoon = $derived(team.status === 'unpublished');
-
 </script>
 
 <svelte:head>

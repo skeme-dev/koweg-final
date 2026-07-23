@@ -5,23 +5,33 @@
 		/** Name der Abteilung bzw. Mannschaft */
 		title?: string | null;
 		/** Steuert die Textbausteine */
-		kind: 'department' | 'team';
+		kind: 'department' | 'team' | 'page';
 	}
 
 	const { title, kind }: ComingSoonProps = $props();
 
-	const copy = $derived(
-		kind === 'department'
-			? {
-					badge: 'Abteilung in Vorbereitung',
-					lead: 'Diese Abteilung stellt sich gerade vor.',
-					body: 'Wir tragen noch Trainingszeiten, Ansprechpartner und Bilder zusammen. Sobald alles steht, findest du hier alle Infos zum Mitmachen.'
-				}
-			: {
-					badge: 'Mannschaft in Vorbereitung',
-					lead: 'Diese Mannschaft stellt sich gerade vor.',
-					body: 'Kader, Trainingszeiten und Ansprechpartner werden gerade zusammengetragen. Schau bald wieder vorbei.'
-				}
+	const copy = $derived.by(() => {
+		switch (kind) {
+			case 'department':
+				return {
+					badge: 'Abteilung',
+					lead: 'Diese Abteilung ist bald verfügbar.',
+					body: 'Wir arbeiten gerade daran, diese Abteilung mit Inhalten zu füllen. Bitte haben Sie noch etwas Geduld.',
+				};
+			case 'team':
+				return {	
+					badge: 'Mannschaft',
+					lead: 'Diese Mannschaft ist bald verfügbar.',
+					body: 'Wir arbeiten gerade daran, diese Mannschaft mit Inhalten zu füllen. Bitte haben Sie noch etwas Geduld.',
+				};
+			case 'page':
+				return {
+					badge: 'Seite',
+					lead: 'Diese Seite ist bald verfügbar.',
+					body: 'Wir arbeiten gerade daran, diese Seite mit Inhalten zu füllen. Bitte haben Sie noch etwas Geduld.',
+				};
+			}
+		}
 	);
 </script>
 
