@@ -9,9 +9,12 @@ import { type QueryFilter, aggregate, readItem, readSingleton } from '@directus/
  * Junction, `item:<collection>` für M2A). Beide sind zur Laufzeit gültig.
  */
 const teamsDeep = {
+	// Mitglieder nach dem o2m-Sortierfeld team_sort (auf directus_users)
+	members: { _sort: ['team_sort'] },
 	related_posts: { _sort: ['sort', '-published_at'] },
-	// sortiert die Junction-Zeilen nach den Feldern des verknüpften Trainings
-	trainings: { _sort: ['trainings_id.sort', 'trainings_id.day'] }
+	// manuelle Reihenfolge der Trainings pro Team über das sort-Feld der Junction
+	// teams_trainings_1; trainings_id.day als Fallback für noch unsortierte Zeilen
+	trainings: { _sort: ['sort', 'trainings_id.day'] }
 } as any;
 
 const blocksDeep = {
@@ -53,6 +56,7 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 						'first_name',
 						'last_name',
 						'email',
+						'team_sort',
 						{
 							avatar: ['id']
 						}
@@ -75,6 +79,7 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 				{
 					// M2M über die Junction teams_trainings_1
 					trainings: [
+					"sort",
 						{
 							trainings_id: [
 								'id',
@@ -130,6 +135,7 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 						'last_name',
 						'email',
 						'title',
+						'department_sort',
 						{
 							avatar: ['id']
 						}
@@ -162,6 +168,8 @@ export const fetchDepartmentsData = async (fetch: RequestEvent['fetch']) => {
 			],
 			deep: {
 				teams: { _sort: ['sort'] },
+				// Leiter/zugeordnete User nach dem o2m-Sortierfeld department_sort
+				leader: { _sort: ['department_sort'] },
 				related_posts: { _sort: ['sort', '-published_at'] }
 			}
 		})
@@ -189,6 +197,7 @@ export const fetchPageData = async (
 				'title',
 				'template',
 				'permalink',
+				'status',
 				{
 					hero_image: ['id']
 				},

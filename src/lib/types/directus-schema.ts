@@ -368,7 +368,7 @@ export interface BlockTimelineItem {
 export interface Department {
 	/** @primaryKey */
 	id: string;
-	status?: 'published' | 'draft' | 'archived';
+	status?: 'published' | 'draft' | 'archived' | 'unpublished';
 	sort?: number | null;
 	user_created?: DirectusUser | string | null;
 	date_created?: string | null;
@@ -632,7 +632,7 @@ export interface Page {
 	/** @description Eindeutige URL für diese Seite (Beginne mit `/`, kann mehrere Teile haben `/ueber/mich`)). @required */
 	permalink: string;
 	/** @description In welcher Phase befindet sich diese Seite? */
-	status?: 'draft' | 'in_review' | 'published';
+	status?: 'draft' | 'in_review' | 'published' | 'unpublished';
 	/** @description Publish now or schedule for later. */
 	published_at?: string | null;
 	seo?: ExtensionSeoMetadata | null;
@@ -715,7 +715,7 @@ export interface Sponsor {
 export interface Team {
 	/** @primaryKey */
 	id: string;
-	status?: 'published' | 'draft' | 'archived';
+	status?: 'published' | 'draft' | 'archived' | 'unpublished';
 	sort?: number | null;
 	user_created?: DirectusUser | string | null;
 	date_created?: string | null;
@@ -744,6 +744,7 @@ export interface TeamsTrainings1 {
 	id: number;
 	teams_id?: Team | string | null;
 	trainings_id?: Training | string | null;
+	sort?: number | null;
 }
 
 export interface Training {
@@ -1069,6 +1070,10 @@ export interface DirectusUser {
 	text_direction?: 'auto' | 'ltr' | 'rtl';
 	related_department?: Department | string | null;
 	related_team?: Team | string | null;
+	/** @description Sortierwert fuer die o2m-Zuordnung (Drag&Drop) */
+	team_sort?: number | null;
+	/** @description Sortierwert fuer die o2m-Zuordnung (Drag&Drop) */
+	department_sort?: number | null;
 	/** @description Blog posts this user has authored. */
 	posts?: Post[] | string[];
 	policies?: DirectusAccess[] | string[];
