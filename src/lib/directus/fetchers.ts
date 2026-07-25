@@ -212,6 +212,16 @@ export const fetchPageData = async (
 						{
 							item: {
 								block_richtext: ['id', 'tagline', 'headline', 'content', 'alignment'],
+									block_table: [
+										'id',
+										'tagline',
+										'headline',
+										'caption',
+										'variant',
+										'has_header_row',
+										'has_header_column',
+										'content'
+									],
 								block_gallery: [
 									'id',
 									'tagline',
@@ -319,11 +329,15 @@ export const fetchPageData = async (
 									}
 								],
 								block_location_card: [
+									'id',
 									'title',
 									'description',
 									'link',
 									{
 										image: ['id']
+									},
+									{
+										location: ['id', 'title', 'link', 'description']
 									}
 								],
 								block_person_gallery: [
