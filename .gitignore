@@ -8,3 +8,6 @@ node_modules
 .vercel/
 .env
 .env.local
+
+# Directus-Export (enthält Secrets: openai_api_key, User-Token/Hashes)
+directus-template/

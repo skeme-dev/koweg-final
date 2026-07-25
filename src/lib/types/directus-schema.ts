@@ -164,6 +164,8 @@ export interface BlockLocationCard {
 	link: string;
 	/** @required */
 	image: DirectusFile | string;
+	/** @description Verweis auf eine Sportstätte aus der Locations-Tabelle. Titel, Link und Beschreibung werden von dort übernommen – das Bild lädst du unten im Block hoch. */
+	location?: Location | string | null;
 }
 
 export interface BlockOpeningTime {
@@ -311,6 +313,29 @@ export interface BlockSponsorGalleryItem {
 	date_updated?: string | null;
 	sponsor?: Sponsor | string | null;
 	sponsor_gallery?: BlockSponsorGallery | string | null;
+}
+
+export interface BlockTable {
+	/** @primaryKey */
+	id: string;
+	/** @description Kleiner Text über der Überschrift, um den Abschnitt zu benennen. */
+	tagline?: string | null;
+	/** @description Größere Hauptüberschrift für diesen Abschnitt. */
+	headline?: string | null;
+	/** @description Visueller Stil der Tabelle. */
+	variant?: 'default' | 'striped' | 'bordered' | null;
+	/** @description Erste Zeile als Kopfzeile darstellen. */
+	has_header_row?: boolean | null;
+	/** @description Erste Spalte hervorheben (z. B. für Zeilen­beschriftungen). */
+	has_header_column?: boolean | null;
+	/** @description Zeilen der Tabelle. Jede Zeile enthält eine Liste von Zellen (Text). */
+	content?: Array<{ cells: Array<{ value: string }> }> | null;
+	/** @description Optionale Beschriftung unterhalb der Tabelle (z. B. Quelle oder Stand). */
+	caption?: string | null;
+	date_created?: string | null;
+	user_created?: string | null;
+	date_updated?: string | null;
+	user_updated?: string | null;
 }
 
 export interface BlockTeamCard {
@@ -610,7 +635,7 @@ export interface PageBlock {
 	/** @description The id of the page that this block belongs to. */
 	page?: Page | string | null;
 	/** @description The data for the block. */
-	item?: BlockRichtext | BlockForm | BlockPost | BlockGallery | BlockTimeline | BlockLocationCard | BlockPersonCard | BlockTeamCard | BlockSponsorGallery | BlockOpeningTime | BlockFileCard | BlockPersonGallery | string | null;
+	item?: BlockRichtext | BlockForm | BlockPost | BlockGallery | BlockTimeline | BlockLocationCard | BlockPersonCard | BlockTeamCard | BlockSponsorGallery | BlockOpeningTime | BlockFileCard | BlockPersonGallery | BlockTable | string | null;
 	/** @description The collection (type of block). */
 	collection?: string | null;
 	/** @description Temporarily hide this block on the website without having to remove it from your page. */
@@ -850,6 +875,7 @@ export interface DirectusField {
 	group?: DirectusField | string | null;
 	validation?: 'json' | null;
 	validation_message?: string | null;
+	searchable?: boolean;
 }
 
 export interface DirectusFile {
@@ -1028,7 +1054,6 @@ export interface DirectusSettings {
 	public_registration_role?: DirectusRole | string | null;
 	public_registration_email_filter?: 'json' | null;
 	visual_editor_urls?: Array<{ url: string }> | null;
-	accepted_terms?: boolean | null;
 	project_id?: string | null;
 	mcp_enabled?: boolean;
 	mcp_allow_deletes?: boolean;
@@ -1037,6 +1062,24 @@ export interface DirectusSettings {
 	mcp_system_prompt?: string | null;
 	/** @description Settings for the Command Palette Module. */
 	command_palette_settings?: Record<string, any> | null;
+	project_owner?: string | null;
+	project_usage?: string | null;
+	org_name?: string | null;
+	product_updates?: boolean | null;
+	project_status?: string | null;
+	ai_openai_api_key?: string | null;
+	ai_anthropic_api_key?: string | null;
+	ai_system_prompt?: string | null;
+	ai_google_api_key?: string | null;
+	ai_openai_compatible_api_key?: string | null;
+	ai_openai_compatible_base_url?: string | null;
+	ai_openai_compatible_name?: string | null;
+	ai_openai_compatible_models?: Array<{ id: string; name: string; context: number; output: number; attachment: boolean; reasoning: boolean; providerOptions: Record<string, any> }> | null;
+	ai_openai_compatible_headers?: Array<{ header: string; value: string }> | null;
+	ai_openai_allowed_models?: Array<`gpt-4o-mini` | `gpt-4.1-nano` | `gpt-4.1-mini` | `gpt-4.1` | `gpt-5-nano` | `gpt-5-mini` | `gpt-5` | `gpt-5.2` | `gpt-5.2-chat-latest` | `gpt-5.2-pro` | `gpt-5.4` | `gpt-5.4-pro`> | null;
+	ai_anthropic_allowed_models?: Array<`claude-haiku-4-5` | `claude-sonnet-4-5` | `claude-opus-4-5` | `claude-sonnet-4-6` | `claude-opus-4-6`> | null;
+	ai_google_allowed_models?: Array<`gemini-3-pro-preview` | `gemini-3-flash-preview` | `gemini-2.5-pro` | `gemini-2.5-flash` | `gemini-3.1-pro-preview` | `gemini-3.1-flash-lite-preview` | `gemini-2.5-flash-lite`> | null;
+	collaborative_editing_enabled?: boolean;
 }
 
 export interface DirectusUser {
@@ -1077,21 +1120,6 @@ export interface DirectusUser {
 	/** @description Blog posts this user has authored. */
 	posts?: Post[] | string[];
 	policies?: DirectusAccess[] | string[];
-}
-
-export interface DirectusWebhook {
-	/** @primaryKey */
-	id: number;
-	name?: string;
-	method?: null;
-	url?: string;
-	status?: 'active' | 'inactive';
-	data?: boolean;
-	actions?: 'create' | 'update' | 'delete';
-	collections?: string[];
-	headers?: Array<{ header: string; value: string }> | null;
-	was_active_before_deprecation?: boolean;
-	migrated_flow?: DirectusFlow | string | null;
 }
 
 export interface DirectusDashboard {
@@ -1222,6 +1250,48 @@ export interface DirectusExtension {
 	bundle?: string | null;
 }
 
+export interface DirectusDeployment {
+	/** @primaryKey */
+	id: string;
+	provider?: string;
+	credentials?: string | null;
+	options?: 'json' | null;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	webhook_ids?: 'json' | null;
+	webhook_secret?: string | null;
+	last_synced_at?: string | null;
+	projects?: DirectusDeploymentProject[] | string[];
+}
+
+export interface DirectusDeploymentProject {
+	/** @primaryKey */
+	id: string;
+	deployment?: DirectusDeployment | string;
+	external_id?: string;
+	name?: string;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	url?: string | null;
+	framework?: string | null;
+	deployable?: boolean;
+	runs?: DirectusDeploymentRun[] | string[];
+}
+
+export interface DirectusDeploymentRun {
+	/** @primaryKey */
+	id: string;
+	project?: DirectusDeploymentProject | string;
+	external_id?: string;
+	target?: string;
+	date_created?: string | null;
+	user_created?: DirectusUser | string | null;
+	status?: string | null;
+	url?: string | null;
+	started_at?: string | null;
+	completed_at?: string | null;
+}
+
 export interface Schema {
 	ai_prompts: AiPrompt[];
 	block_button: BlockButton[];
@@ -1243,6 +1313,7 @@ export interface Schema {
 	block_richtext: BlockRichtext[];
 	block_sponsor_gallery: BlockSponsorGallery[];
 	block_sponsor_gallery_items: BlockSponsorGalleryItem[];
+	block_table: BlockTable[];
 	block_team_card: BlockTeamCard[];
 	block_team_gallery: BlockTeamGallery[];
 	block_timeline: BlockTimeline[];
@@ -1285,7 +1356,6 @@ export interface Schema {
 	directus_sessions: DirectusSession[];
 	directus_settings: DirectusSettings;
 	directus_users: DirectusUser[];
-	directus_webhooks: DirectusWebhook[];
 	directus_dashboards: DirectusDashboard[];
 	directus_panels: DirectusPanel[];
 	directus_notifications: DirectusNotification[];
@@ -1295,6 +1365,9 @@ export interface Schema {
 	directus_translations: DirectusTranslation[];
 	directus_versions: DirectusVersion[];
 	directus_extensions: DirectusExtension[];
+	directus_deployments: DirectusDeployment[];
+	directus_deployment_projects: DirectusDeploymentProject[];
+	directus_deployment_runs: DirectusDeploymentRun[];
 }
 
 export enum CollectionNames {
@@ -1318,6 +1391,7 @@ export enum CollectionNames {
 	block_richtext = 'block_richtext',
 	block_sponsor_gallery = 'block_sponsor_gallery',
 	block_sponsor_gallery_items = 'block_sponsor_gallery_items',
+	block_table = 'block_table',
 	block_team_card = 'block_team_card',
 	block_team_gallery = 'block_team_gallery',
 	block_timeline = 'block_timeline',
@@ -1360,7 +1434,6 @@ export enum CollectionNames {
 	directus_sessions = 'directus_sessions',
 	directus_settings = 'directus_settings',
 	directus_users = 'directus_users',
-	directus_webhooks = 'directus_webhooks',
 	directus_dashboards = 'directus_dashboards',
 	directus_panels = 'directus_panels',
 	directus_notifications = 'directus_notifications',
@@ -1369,5 +1442,8 @@ export enum CollectionNames {
 	directus_operations = 'directus_operations',
 	directus_translations = 'directus_translations',
 	directus_versions = 'directus_versions',
-	directus_extensions = 'directus_extensions'
+	directus_extensions = 'directus_extensions',
+	directus_deployments = 'directus_deployments',
+	directus_deployment_projects = 'directus_deployment_projects',
+	directus_deployment_runs = 'directus_deployment_runs'
 }

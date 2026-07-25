@@ -12,6 +12,7 @@
 	import SponsorGallery from './SponsorGallery.svelte';
 	import OpeningTime from './OpeningTime.svelte';
 	import PersonGallery from './PersonGallery.svelte';
+	import Table from './Table.svelte';
 	interface BaseBlockProps {
 		block: {
 			collection: string;
@@ -35,7 +36,8 @@
 		block_file_card: FileCard,
 		block_sponsor_gallery: SponsorGallery,
 		block_opening_time: OpeningTime,
-		block_person_gallery: PersonGallery
+		block_person_gallery: PersonGallery,
+		block_table: Table
 	} as const;
 
 	const Component = $derived(components[block.collection as keyof typeof components]);

@@ -4,10 +4,7 @@
 
 	import { page } from '$app/state';
 	import Container from '$lib/components/ui/Container.svelte';
-	import SearchModal from '../ui/SearchModal.svelte';
-	import LightSwitch from './LightSwitch.svelte';
 	import { PUBLIC_DIRECTUS_URL } from '$env/static/public';
-	import { goto } from '$app/navigation';
 	import { ChevronDown, Menu } from '@lucide/svelte';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import setAttr from '$lib/directus/visualEditing';
@@ -77,10 +74,11 @@
 								class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0  data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95  data-[side=bottom]:slide-in-from-top-2   data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:bg-background-variant !border-accent top-full z-50 w-56 max-w-full  overflow-hidden !border-t-[3px]"
 							>
 								{#each item.children as child}
+									{@const childLink = child.page?.permalink || (child.department ? `/abteilungen/${child.department.slug}` : child.url)}
 									<DropdownMenu.Item class="!bg-transparent">
 										<a
 											class="hover:text-primary-500 text-lg w-full font-semibold"
-											href={child.page?.permalink || "/abteilungen/"+child.department?.slug}>{child.title}</a
+											href={childLink}>{child.title}</a
 										>
 									</DropdownMenu.Item>
 								{/each}
