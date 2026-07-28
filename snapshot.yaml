@@ -5486,51 +5486,6 @@ fields:
       has_auto_increment: false
       foreign_key_table: directus_files
       foreign_key_column: id
-  - collection: block_location_card
-    field: location
-    type: integer
-    meta:
-      collection: block_location_card
-      conditions: null
-      display: null
-      display_options: null
-      field: location
-      group: null
-      hidden: false
-      interface: select-dropdown-m2o
-      note: >-
-        Verweis auf eine Sportstätte aus der Locations-Tabelle. Titel, Link und
-        Beschreibung werden von dort übernommen – das Bild lädst du unten im
-        Block hoch.
-      options:
-        template: '{{title}}'
-      readonly: false
-      required: false
-      searchable: true
-      sort: 8
-      special:
-        - m2o
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: location
-      table: block_location_card
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: locations
-      foreign_key_column: id
   - collection: block_opening_time
     field: id
     type: uuid
@@ -22734,10 +22689,11 @@ fields:
       note: null
       options:
         sort: null
+        template: '{{title}} / {{slug}}'
       readonly: false
       required: false
       searchable: true
-      sort: 15
+      sort: 16
       special:
         - o2m
       translations:
@@ -22745,7 +22701,7 @@ fields:
           translation: Verwandte Berichte
       validation: null
       validation_message: null
-      width: half
+      width: full
   - collection: teams
     field: members
     type: alias
@@ -22840,17 +22796,19 @@ fields:
       interface: list-m2m
       note: null
       options:
-        template: '{{trainings_id.title}} -> {{teams_id.title}}'
+        template: >-
+          {{trainings_id.day}} / {{trainings_id.start}}-{{trainings_id.end}} Uhr
+          / {{trainings_id.location.title}}
       readonly: false
       required: false
       searchable: true
-      sort: 16
+      sort: 15
       special:
         - m2m
       translations: null
       validation: null
       validation_message: null
-      width: half
+      width: full
   - collection: teams_trainings
     field: id
     type: integer
@@ -24408,27 +24366,6 @@ relations:
       foreign_key_table: directus_files
       foreign_key_column: id
       constraint_name: block_location_card_image_foreign
-      on_update: NO ACTION
-      on_delete: SET NULL
-  - collection: block_location_card
-    field: location
-    related_collection: locations
-    meta:
-      junction_field: null
-      many_collection: block_location_card
-      many_field: location
-      one_allowed_collections: null
-      one_collection: locations
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    schema:
-      table: block_location_card
-      column: location
-      foreign_key_table: locations
-      foreign_key_column: id
-      constraint_name: block_location_card_location_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: block_opening_times_items

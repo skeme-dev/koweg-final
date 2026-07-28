@@ -2,12 +2,6 @@
 	import DirectusImage from '../shared/DirectusImage.svelte';
 	import { sanitizeHtml } from '$lib/utils/sanitize';
 
-	interface LocationRef {
-		title?: string | null;
-		link?: string | null;
-		description?: string | null;
-	}
-
 	interface LocationCardProps {
 		data: {
 			title?: string | null;
@@ -16,17 +10,14 @@
 			image?: {
 				id: string;
 			} | null;
-			// Referenz auf die Locations-Tabelle (hat Vorrang vor den Inline-Feldern)
-			location?: LocationRef | null;
 		};
 	}
 
 	let { data }: LocationCardProps = $props();
 
-	// Referenzierte Location gewinnt; Inline-Felder als Fallback (Abwärtskompatibilität)
-	const title = $derived(data.location?.title ?? data.title ?? '');
-	const description = $derived(data.location?.description ?? data.description ?? '');
-	const link = $derived(data.location?.link ?? data.link ?? '');
+	const title = $derived(data.title ?? '');
+	const description = $derived(data.description ?? '');
+	const link = $derived(data.link ?? '');
 	const image = $derived(data.image);
 </script>
 

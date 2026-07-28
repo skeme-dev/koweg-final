@@ -1,4 +1,6 @@
 <script lang="ts">
+	import DirectusImage from '$lib/components/shared/DirectusImage.svelte';
+
 	let { data }: TrainingCardProps = $props();
 
 	interface TrainingCardProps {
@@ -11,6 +13,7 @@
 				location: {
 					title: string;
 					link: string;
+					image?: { id: string } | null;
 				};
 				min_age?: number;
 				max_age?: number;
@@ -35,6 +38,17 @@
 </script>
 
 <div class="group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+	{#if schedule.location?.image}
+		<div class="h-40 w-full overflow-hidden">
+			<DirectusImage
+				uuid={schedule.location.image.id}
+				alt={'Foto von ' + schedule.location.title}
+				fill
+				class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+			/>
+		</div>
+	{/if}
+
 	<div class="bg-accent px-5 py-3">
 		<span class="text-lg font-bold text-white">{dayTranslations[schedule.day]}</span>
 	</div>

@@ -87,7 +87,7 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 								'title',
 								'day',
 								{
-									location: ['title', 'link']
+									location: ['title', 'link', { image: ['id'] }]
 								},
 								'min_age',
 								'max_age',
@@ -335,9 +335,6 @@ export const fetchPageData = async (
 									'link',
 									{
 										image: ['id']
-									},
-									{
-										location: ['id', 'title', 'link', 'description']
 									}
 								],
 								block_person_gallery: [
@@ -380,6 +377,7 @@ export const fetchPageData = async (
 									'title',
 									{
 										items: [
+										'sort',
 											{
 												sponsor: [
 													'id',
