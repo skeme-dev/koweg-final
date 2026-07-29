@@ -164,8 +164,6 @@ export interface BlockLocationCard {
 	link: string;
 	/** @required */
 	image: DirectusFile | string;
-	/** @description Verweis auf eine Sportstätte aus der Locations-Tabelle. Titel, Link und Beschreibung werden von dort übernommen – das Bild lädst du unten im Block hoch. */
-	location?: Location | string | null;
 }
 
 export interface BlockOpeningTime {
