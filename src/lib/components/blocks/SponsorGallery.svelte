@@ -25,6 +25,7 @@
 
 	const sponsors = $derived([...data.items].sort((a, b) => (a.sort ?? 0) - (b.sort ?? 0)));
 	const title = $derived(data.title);
+
 </script>
 
 {#if title}
