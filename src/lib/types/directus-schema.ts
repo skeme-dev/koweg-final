@@ -108,7 +108,7 @@ export interface BlockGallery {
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
 	/** @description Images to include in the image gallery. */
-	items?: DirectusFile[] | string[] | null;
+	items?: BlockGalleryItem[] | string[];
 }
 
 export interface BlockGalleryItem {
@@ -612,7 +612,7 @@ export interface NavigationItem {
 	/** @description Label shown to the user for the menu item. @required */
 	title: string;
 	/** @description What type of link is this? Page and Post allow you to link to internal content. URL is for external content. Group can contain other menu items. */
-	type?: 'page' | 'post' | 'url' | 'group' | 'Abteilung' | null;
+	type?: 'page' | 'post' | 'url' | 'group' | 'Abteilung' | 'file' | null;
 	/** @description Verlinkte URL. Kann relativ sein (z.B. `/meine-seite`) oder eine externe URL (z.B. `https://docs.directus.io`) */
 	url?: string | null;
 	/** @description Interner verlinkter Bericht. */
@@ -622,6 +622,8 @@ export interface NavigationItem {
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
 	department?: Department | string | null;
+	/** @description Zum Download verlinkte Datei. */
+	file?: DirectusFile | string | null;
 	/** @description Add child menu items within the group. */
 	children?: NavigationItem[] | string[];
 }
@@ -665,7 +667,7 @@ export interface Page {
 	user_updated?: DirectusUser | string | null;
 	template?: 'main_page' | 'sub_page' | 'landing_page' | null;
 	hero_image?: DirectusFile | string | null;
-	/** @description Create and arrange different content blocks (like text, images, or videos) to build your page. */
+	/** @description Erstelle und sortiere verschiedene Inhalte (wie Text, Bilder oder Tabllen), um deine Seite zu bauen. */
 	blocks?: PageBlock[] | string[];
 }
 

@@ -8729,7 +8729,8 @@ fields:
       hidden: false
       interface: list-o2m
       note: null
-      options: null
+      options:
+        template: '{{sponsor.title}}'
       readonly: false
       required: false
       searchable: true
@@ -9002,7 +9003,8 @@ fields:
       hidden: false
       interface: select-dropdown-m2o
       note: null
-      options: null
+      options:
+        template: '{{title}}'
       readonly: false
       required: false
       searchable: true
@@ -18048,6 +18050,9 @@ fields:
             value: group
           - text: Abteilung
             value: Abteilung
+          - icon: download
+            text: Datei
+            value: file
       field: type
       group: null
       hidden: false
@@ -18072,6 +18077,9 @@ fields:
             value: group
           - text: Abteilung
             value: Abteilung
+          - icon: download
+            text: Datei
+            value: file
       readonly: false
       required: false
       searchable: true
@@ -18482,6 +18490,55 @@ fields:
       generation_expression: null
       has_auto_increment: false
       foreign_key_table: departments
+      foreign_key_column: id
+  - collection: navigation_items
+    field: file
+    type: uuid
+    meta:
+      collection: navigation_items
+      conditions:
+        - hidden: false
+          name: Show if type = file
+          rule:
+            _and:
+              - type:
+                  _eq: file
+      display: null
+      display_options: null
+      field: file
+      group: null
+      hidden: true
+      interface: file
+      note: Zum Download verlinkte Datei.
+      options: null
+      readonly: false
+      required: false
+      searchable: true
+      sort: 13
+      special:
+        - file
+      translations:
+        - language: de-DE
+          translation: Datei
+      validation: null
+      validation_message: null
+      width: full
+    schema:
+      name: file
+      table: navigation_items
+      data_type: uuid
+      default_value: null
+      max_length: null
+      numeric_precision: null
+      numeric_scale: null
+      is_nullable: true
+      is_unique: false
+      is_indexed: false
+      is_primary_key: false
+      is_generated: false
+      generation_expression: null
+      has_auto_increment: false
+      foreign_key_table: directus_files
       foreign_key_column: id
   - collection: page_blocks
     field: id
@@ -19685,8 +19742,8 @@ fields:
       hidden: false
       interface: list-m2a
       note: >-
-        Create and arrange different content blocks (like text, images, or
-        videos) to build your page.
+        Erstelle und sortiere verschiedene Inhalte (wie Text, Bilder oder
+        Tabllen), um deine Seite zu bauen.
       options:
         enableSelect: false
         prefix: null
@@ -24842,7 +24899,7 @@ relations:
       one_collection_field: null
       one_deselect_action: nullify
       one_field: items
-      sort_field: null
+      sort_field: sort
     schema:
       table: block_sponsor_gallery_items
       column: sponsor_gallery
@@ -25902,6 +25959,27 @@ relations:
       foreign_key_table: departments
       foreign_key_column: id
       constraint_name: navigation_items_department_foreign
+      on_update: NO ACTION
+      on_delete: SET NULL
+  - collection: navigation_items
+    field: file
+    related_collection: directus_files
+    meta:
+      junction_field: null
+      many_collection: navigation_items
+      many_field: file
+      one_allowed_collections: null
+      one_collection: directus_files
+      one_collection_field: null
+      one_deselect_action: nullify
+      one_field: null
+      sort_field: null
+    schema:
+      table: navigation_items
+      column: file
+      foreign_key_table: directus_files
+      foreign_key_column: id
+      constraint_name: navigation_items_file_foreign
       on_update: NO ACTION
       on_delete: SET NULL
   - collection: page_blocks

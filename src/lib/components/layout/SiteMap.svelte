@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { ChevronDown } from '@lucide/svelte';
+	import { ChevronDown, Download } from '@lucide/svelte';
 	import * as Collapsible from '../ui/collapsible/';
 	import { slide } from 'svelte/transition';
 	import { cn, sortBySortField } from '$lib/utils';
+	import { getNavigationLink } from '$lib/directus/directus-utils';
 
 	const navigation = $derived(page.data.headerNavigation);
 	const departments = $derived(page.data.departments ?? []);
@@ -67,10 +68,7 @@
 	 * Gibt die href für einen Navigationseintrag zurück
 	 */
 	function getHref(child: any): string {
-		if (child.department?.slug) {
-			return `/abteilungen/${child.department.slug}`;
-		}
-		return child.page?.permalink ?? child.url ?? '#';
+		return getNavigationLink(child).href;
 	}
 
 	/**
@@ -129,10 +127,12 @@
 					<!-- Einfacher Link -->
 					<li class="py-2">
 						<a
-							class={cn('text-lg', active && 'font-semibold')}
+							class={cn('text-lg flex items-center gap-1', active && 'font-semibold')}
 							href={getHref(child)}
+							download={child.file?.id ? '' : undefined}
 						>
 							{child.title}
+							{#if child.file?.id}<Download class="size-4" />{/if}
 						</a>
 					</li>
 				{/if}

@@ -5,9 +5,10 @@
 	import { page } from '$app/state';
 	import Container from '$lib/components/ui/Container.svelte';
 	import { PUBLIC_DIRECTUS_URL } from '$env/static/public';
-	import { ChevronDown, Menu } from '@lucide/svelte';
+	import { ChevronDown, Download, Menu } from '@lucide/svelte';
 	import * as Collapsible from '$lib/components/ui/collapsible';
 	import setAttr from '$lib/directus/visualEditing';
+	import { getNavigationLink } from '$lib/directus/directus-utils';
 
 	const globals = $derived(page.data.globals);
 	const navigation = $derived(page.data.headerNavigation);
@@ -55,11 +56,13 @@
 			>
 				{#each navigation?.items as item (item.id)}
 					{#if item.children.length === 0}
+						{@const link = getNavigationLink(item)}
 						<Button
-							href={item.page?.permalink}
+							href={link.href}
+							download={link.isDownload ? '' : undefined}
 							variant="ghost"
 							class="!font-heading text-xl font-semibold uppercase !text-inherit
-">{item.title}</Button
+">{item.title}{#if link.isDownload}<Download class="ml-1 size-4" />{/if}</Button
 						>
 					{:else}
 						<DropdownMenu.Root>
@@ -74,11 +77,15 @@
 								class="bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0  data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95  data-[side=bottom]:slide-in-from-top-2   data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 dark:bg-background-variant !border-accent top-full z-50 w-56 max-w-full  overflow-hidden !border-t-[3px]"
 							>
 								{#each item.children as child}
-									{@const childLink = child.page?.permalink || (child.department ? `/abteilungen/${child.department.slug}` : child.url)}
+									{@const childLink = getNavigationLink(child)}
 									<DropdownMenu.Item class="!bg-transparent">
 										<a
-											class="hover:text-primary-500 text-lg w-full font-semibold"
-											href={childLink}>{child.title}</a
+											class="hover:text-primary-500 text-lg flex w-full items-center gap-1 font-semibold"
+											href={childLink.href}
+											download={childLink.isDownload ? '' : undefined}
+											>{child.title}{#if childLink.isDownload}<Download
+													class="ml-auto size-4"
+												/>{/if}</a
 										>
 									</DropdownMenu.Item>
 								{/each}
@@ -108,12 +115,16 @@
 										<div class="flex flex-col gap-4">
 											{#each navigation?.items as item (item.id)}
 												{#if item.children.length === 0}
+													{@const link = getNavigationLink(item)}
 													<DropdownMenu.Item class="!bg-transparent p-0 "
 														><a
-															href={item.page?.permalink || item.url || "/abteilungen/"+item.department?.slug || '#'}
-															class="font-heading text-nav w-full"
+															href={link.href}
+															download={link.isDownload ? '' : undefined}
+															class="font-heading text-nav flex w-full items-center gap-1"
 														>
-															{item.title}</a
+															{item.title}{#if link.isDownload}<Download
+																	class="size-4"
+																/>{/if}</a
 														></DropdownMenu.Item
 													>
 												{:else}
@@ -129,9 +140,14 @@
 														<Collapsible.Content>
 															<div class="ml-4 mt-2 flex flex-col gap-2">
 																{#each item.children as child (child.id)}
+																	{@const childLink = getNavigationLink(child)}
 																	<a
-																		class="font-heading text-nav w-full"
-																		href={child.page?.permalink || child.url || "/abteilungen/"+child.department?.slug}>{child.title}</a
+																		class="font-heading text-nav flex w-full items-center gap-1"
+																		href={childLink.href}
+																		download={childLink.isDownload ? '' : undefined}
+																		>{child.title}{#if childLink.isDownload}<Download
+																				class="size-4"
+																			/>{/if}</a
 																	>
 																{/each}
 															</div>

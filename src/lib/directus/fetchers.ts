@@ -514,13 +514,20 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 							items: [
 								'id',
 								'title',
+								'url',
 								{
 									page: ['permalink'],
+									department: ['id', 'slug'],
+									file: ['id', 'filename_download'],
 									children: [
 										'id',
 										'title',
 										'url',
-										{ page: ['permalink'], department: ['id', 'slug'] }
+										{
+											page: ['permalink'],
+											department: ['id', 'slug'],
+											file: ['id', 'filename_download']
+										}
 									]
 								}
 							]
@@ -538,9 +545,16 @@ export const fetchSiteData = async (fetch: RequestEvent['fetch']) => {
 							items: [
 								'id',
 								'title',
+								'url',
 								{
 									page: ['permalink'],
-									children: ['id', 'title', 'url', { page: ['permalink'] }]
+									file: ['id', 'filename_download'],
+									children: [
+										'id',
+										'title',
+										'url',
+										{ page: ['permalink'], file: ['id', 'filename_download'] }
+									]
 								}
 							]
 						}

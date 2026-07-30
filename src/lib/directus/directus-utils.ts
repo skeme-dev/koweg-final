@@ -12,3 +12,26 @@ export function getDirectusAssetURL(
 
 	return `${PUBLIC_DIRECTUS_URL}/assets/${fileOrString.id}`;
 }
+
+/**
+ * Ermittelt Ziel-URL und Download-Flag für einen Navigationseintrag.
+ * Reihenfolge: hinterlegte Datei > Abteilung > interne Seite > URL.
+ */
+export function getNavigationLink(item: {
+	file?: { id: string } | null;
+	department?: { slug?: string | null } | null;
+	page?: { permalink?: string | null } | null;
+	url?: string | null;
+}): { href: string; isDownload: boolean } {
+	if (item?.file?.id) {
+		// `?download` setzt Content-Disposition: attachment – das `download`-Attribut
+		// allein greift bei der fremden Directus-Origin nicht.
+		return { href: `${getDirectusAssetURL(item.file.id)}?download`, isDownload: true };
+	}
+
+	if (item?.department?.slug) {
+		return { href: `/abteilungen/${item.department.slug}`, isDownload: false };
+	}
+
+	return { href: item?.page?.permalink ?? item?.url ?? '#', isDownload: false };
+}
