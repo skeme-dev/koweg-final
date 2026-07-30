@@ -60,6 +60,7 @@
 						<Button
 							href={link.href}
 							download={link.isDownload ? '' : undefined}
+							target={link.target}
 							variant="ghost"
 							class="!font-heading text-xl font-semibold uppercase !text-inherit
 ">{item.title}{#if link.isDownload}<Download class="ml-1 size-4" />{/if}</Button
@@ -82,6 +83,7 @@
 										<a
 											class="hover:text-primary-500 text-lg flex w-full items-center gap-1 font-semibold"
 											href={childLink.href}
+											target={childLink.target}
 											download={childLink.isDownload ? '' : undefined}
 											>{child.title}{#if childLink.isDownload}<Download
 													class="ml-auto size-4"
@@ -119,6 +121,7 @@
 													<DropdownMenu.Item class="!bg-transparent p-0 "
 														><a
 															href={link.href}
+															target={link.target}
 															download={link.isDownload ? '' : undefined}
 															class="font-heading text-nav flex w-full items-center gap-1"
 														>

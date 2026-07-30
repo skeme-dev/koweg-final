@@ -22,16 +22,16 @@ export function getNavigationLink(item: {
 	department?: { slug?: string | null } | null;
 	page?: { permalink?: string | null } | null;
 	url?: string | null;
-}): { href: string; isDownload: boolean } {
+}): { href: string; isDownload: boolean, target: '_blank' | '_self' } {
 	if (item?.file?.id) {
 		// `?download` setzt Content-Disposition: attachment – das `download`-Attribut
 		// allein greift bei der fremden Directus-Origin nicht.
-		return { href: `${getDirectusAssetURL(item.file.id)}?download`, isDownload: true };
+		return { href: `${getDirectusAssetURL(item.file.id)}?download`, isDownload: true, target: '_self' };
 	}
 
 	if (item?.department?.slug) {
-		return { href: `/abteilungen/${item.department.slug}`, isDownload: false };
+		return { href: `/abteilungen/${item.department.slug}`, isDownload: false, target: '_self' };
 	}
 
-	return { href: item?.page?.permalink ?? item?.url ?? '#', isDownload: false };
+	return { href: item?.page?.permalink ?? item?.url ?? '#', isDownload: false, target: item?.url ? '_blank' : '_self' };
 }
