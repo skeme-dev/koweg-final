@@ -14,6 +14,7 @@
     const team = $derived(data.teams.find((t) => t.slug === page.params.teamSlug) ?? {});
 	const teamEvents = $derived(data.teamEvents ?? []);
 	const isComingSoon = $derived(team.status === 'unpublished');
+
 </script>
 
 <svelte:head>
@@ -25,7 +26,7 @@
 		<meta property="og:type" content="website" />
 	{/if}
 </svelte:head>
-
+ 
 <div class="flex-grow space-y-10 mb-12 mt-6">
 	{#if isComingSoon}
 		<ComingSoon kind="team" title={team.title} />
