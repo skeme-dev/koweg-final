@@ -56,11 +56,11 @@
 		/>
 	</div>
 
-	{#if team.members?.length > 0}
+	{#if team.trainers?.length > 0}
 		<div class="space-y-3">
 			<Headline as="h3" headline="Verantwortliche Personen" />
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-				{#each team.members as item}
+				{#each team.trainers as item}
 					<PersonCard data={{ person: item }} />
 				{/each}
 			</div>
