@@ -2,6 +2,26 @@
 
 Stand 2026-08-01. Läuft aktuell: **11.17.4**.
 
+## Entscheidung
+
+**Wir bleiben vorerst bei 11.** (entschieden am 2026-08-01)
+
+`11.17.4` ist der letzte Stand des 11er-Zweigs — der Tag wurde zuletzt am
+30.04.2026 aktualisiert. Mehr als diesen Pin gibt es auf 11 nicht zu holen.
+
+Was den Ausschlag für einen Wechsel geben würde, in dieser Reihenfolge:
+
+1. **Eine Sicherheitslücke in 11.x**, die nicht mehr gepatcht wird. Das ist der
+   Punkt, an dem die Entscheidung nicht mehr freiwillig ist — der 11er-Zweig
+   bekommt keine Updates mehr.
+2. **Der Open Innovation Grant ist bewilligt.** Dann entfällt die Lizenzfrage
+   und es bleibt eine reine Terminfrage.
+3. Ein Feature aus 12, das gebraucht wird.
+
+Bis dahin nichts zu tun. Die Vorarbeit ist gemacht: das Backup-Tooling ist
+gegen 12.2.0 verifiziert und das Test-Rig nimmt die Version als Variable —
+ein Upgrade lässt sich also jederzeit ohne Risiko durchspielen.
+
 ## Kurzfassung
 
 Ein Upgrade auf Directus 12 ist technisch machbar, aber **nicht konfliktfrei**.
