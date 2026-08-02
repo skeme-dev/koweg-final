@@ -11,9 +11,3 @@ node_modules
 
 # Directus-Export (enthält Secrets: openai_api_key, User-Token/Hashes)
 directus-template/
-directus-emails/
-
-# Python (scripts/)
-__pycache__/
-*.pyc
-.venv/
