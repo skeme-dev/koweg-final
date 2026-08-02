@@ -16,7 +16,7 @@
 
 {#if sponsors.length > 0}
 <div class="overflow-hidden" use:emblaCarouselSvelte="{{ plugins, options }}">
-    <div class="flex">
+    <div class="flex items-center">
         {#each sponsors as sponsor}
             <div class="min-w-0 embla__slide">
                 <DirectusImage uuid={sponsor.image.id} alt="bild" />

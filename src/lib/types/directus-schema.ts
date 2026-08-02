@@ -108,7 +108,7 @@ export interface BlockGallery {
 	date_updated?: string | null;
 	user_updated?: DirectusUser | string | null;
 	/** @description Images to include in the image gallery. */
-	items?: BlockGalleryItem[] | string[];
+	items?: DirectusFile[] | string[] | null;
 }
 
 export interface BlockGalleryItem {
@@ -752,9 +752,22 @@ export interface Team {
 	description?: string | null;
 	image?: DirectusFile | string | null;
 	related_department?: Department | string | null;
-	members?: DirectusUser[] | string[];
 	related_posts?: Post[] | string[];
+	/** @description Veraltet - ersetzt durch die M2M-Zuordnung. Wird nach der Umstellung entfernt. */
+	members?: DirectusUser[] | string[];
 	trainings?: TeamsTrainings1[] | string[];
+	/** @description Trainer und Verantwortliche. Eine Person kann in mehreren Mannschaften stehen. */
+	trainers?: TeamsDirectusUser[] | string[];
+}
+
+export interface TeamsDirectusUser {
+	/** @primaryKey */
+	id: number;
+	teams_id?: Team | string | null;
+	directus_users_id?: DirectusUser | string | null;
+	sort?: number | null;
+	/** @description Funktion dieser Person in genau dieser Mannschaft. */
+	funktion?: string | null;
 }
 
 export interface TeamsTraining {
@@ -1112,6 +1125,7 @@ export interface DirectusUser {
 	theme_dark_overrides?: 'json' | null;
 	text_direction?: 'auto' | 'ltr' | 'rtl';
 	related_department?: Department | string | null;
+	/** @description Veraltet - ersetzt durch die M2M-Zuordnung. Wird nach der Umstellung entfernt. */
 	related_team?: Team | string | null;
 	/** @description Sortierwert fuer die o2m-Zuordnung (Drag&Drop) */
 	team_sort?: number | null;
@@ -1119,6 +1133,8 @@ export interface DirectusUser {
 	department_sort?: number | null;
 	/** @description Blog posts this user has authored. */
 	posts?: Post[] | string[];
+	/** @description Mannschaften, in denen diese Person taetig ist. */
+	teams?: TeamsDirectusUser[] | string[];
 	policies?: DirectusAccess[] | string[];
 }
 
@@ -1336,6 +1352,7 @@ export interface Schema {
 	redirects: Redirect[];
 	sponsors: Sponsor[];
 	teams: Team[];
+	teams_directus_users: TeamsDirectusUser[];
 	teams_trainings: TeamsTraining[];
 	teams_trainings_1: TeamsTrainings1[];
 	trainings: Training[];
@@ -1414,6 +1431,7 @@ export enum CollectionNames {
 	redirects = 'redirects',
 	sponsors = 'sponsors',
 	teams = 'teams',
+	teams_directus_users = 'teams_directus_users',
 	teams_trainings = 'teams_trainings',
 	teams_trainings_1 = 'teams_trainings_1',
 	trainings = 'trainings',

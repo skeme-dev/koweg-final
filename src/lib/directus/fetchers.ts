@@ -9,8 +9,9 @@ import { type QueryFilter, aggregate, readItem, readSingleton } from '@directus/
  * Junction, `item:<collection>` für M2A). Beide sind zur Laufzeit gültig.
  */
 const teamsDeep = {
-	// Mitglieder nach dem o2m-Sortierfeld team_sort (auf directus_users)
-	members: { _sort: ['team_sort'] },
+	// Trainer nach dem sort-Feld der Junction teams_directus_users; eine Person
+	// kann in mehreren Mannschaften stehen und dort unterschiedlich einsortiert sein
+	trainers: { _sort: ['sort'] },
 	related_posts: { _sort: ['sort', '-published_at'] },
 	// manuelle Reihenfolge der Trainings pro Team über das sort-Feld der Junction
 	// teams_trainings_1; trainings_id.day als Fallback für noch unsortierte Zeilen
@@ -52,13 +53,20 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 					image: ['id']
 				},
 				{
-					members: [
-						'first_name',
-						'last_name',
-						'email',
-						'team_sort',
+					// M2M über die Junction teams_directus_users
+					trainers: [
+						'sort',
+						'funktion',
 						{
-							avatar: ['id']
+							directus_users_id: [
+								'first_name',
+								'last_name',
+								'email',
+								'title',
+								{
+									avatar: ['id']
+								}
+							]
 						}
 					]
 				},
@@ -102,13 +110,21 @@ export const fetchTeamsData = async (fetch: RequestEvent['fetch']) => {
 		})
 	);
 
-	// Junction-Zeilen auf die Trainings selbst reduzieren, damit die Komponenten
-	// weiterhin eine flache Liste (team.trainings[]) bekommen
+	// Junction-Zeilen auf die verknüpften Datensätze reduzieren, damit die
+	// Komponenten weiterhin flache Listen bekommen
 	return teamsData.map((team: any) => ({
 		...team,
 		trainings: (team.trainings ?? [])
 			.map((entry: any) => entry?.trainings_id)
-			.filter(Boolean)
+			.filter(Boolean),
+		trainers: (team.trainers ?? [])
+			.filter((entry: any) => entry?.directus_users_id)
+			.map((entry: any) => ({
+				...entry.directus_users_id,
+				// die Funktion in genau dieser Mannschaft schlägt den allgemeinen
+				// Titel der Person (PersonCard zeigt beides über dem Namen)
+				title: entry.funktion || entry.directus_users_id.title
+			}))
 	}));
 };
 
