@@ -107,7 +107,6 @@ services:
         PUBLIC_FALLBACK_IMAGE_ID: '${PUBLIC_FALLBACK_IMAGE_ID}'
         DRAFT_MODE_SECRET: '${DRAFT_MODE_SECRET}'
     environment:
-      - SERVICE_URL_KOWEG_3000
       - NODE_ENV=production
       - HOST=0.0.0.0
       - PORT=3000
