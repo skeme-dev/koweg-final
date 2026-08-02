@@ -122,7 +122,9 @@ services:
     #   2. Coolify:    das Backup-Repo als eigene Application deployen und
     #                  diesen Service hier weglassen
     #   3. Auf dem Server: git clone + docker build -t directus-backup:latest .
-    image: 'directus-backup:latest'
+    build:
+      context: https://github.com/skeme-dev/directus-backup.git
+      dockerfile: ./Dockerfile
     restart: unless-stopped
     volumes:
       - 'directus-backups:/backups'
