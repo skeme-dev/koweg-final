@@ -1,0 +1,172 @@
+# Kompletter Stack für Coolify: Directus + PostgreSQL + Redis + Frontend + Backup.
+#
+# Coolify füllt die SERVICE_*-Variablen selbst (Secrets, Domains). Die übrigen
+# Werte trägst du in Coolify unter Environment Variables ein - siehe
+# .env.compose.example.
+#
+# Die Directus-Version ist bewusst exakt gepinnt statt ":11". Ein Rolling-Tag
+# zieht bei jedem Neustart eine andere Version, und Directus wandert beim Start
+# automatisch durch seine Migrationen - ein Downgrade ist dann nicht mehr
+# vorgesehen. Zum Upgrade siehe UPGRADE-DIRECTUS.md.
+
+services:
+  directus:
+    image: 'directus/directus:11.17.4'
+    volumes:
+      - 'directus-uploads:/directus/uploads'
+      - 'directus-extensions:/directus/extensions'
+      - 'directus-templates:/directus/templates'
+    environment:
+      - SERVICE_URL_DIRECTUS_8055
+      - KEY=$SERVICE_BASE64_64_KEY
+      - SECRET=$SERVICE_BASE64_64_SECRET
+      - 'ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}'
+      - ADMIN_PASSWORD=$SERVICE_PASSWORD_ADMIN
+      - DB_CLIENT=postgres
+      - DB_HOST=postgresql
+      - DB_PORT=5432
+      - 'DB_DATABASE=${POSTGRESQL_DATABASE:-directus}'
+      - DB_USER=$SERVICE_USER_POSTGRESQL
+      - DB_PASSWORD=$SERVICE_PASSWORD_POSTGRESQL
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - WEBSOCKETS_ENABLED=true
+      # Ohne PUBLIC_URL baut Directus Asset- und E-Mail-Links aus dem
+      # Request-Header zusammen - hinter einem Proxy wird das falsch.
+      - 'PUBLIC_URL=${PUBLIC_DIRECTUS_URL}'
+      # Directus läuft hinter Coolifys Proxy; ohne das steht in Rate-Limits und
+      # im Activity-Log die Proxy-IP statt der des Besuchers.
+      - IP_TRUST_PROXY=true
+      # Redis ist im Stack, wird aber ohne diese beiden Zeilen nur für
+      # WebSockets und Rate-Limiting benutzt. Einschalten macht die API
+      # spürbar schneller; bedenke, dass Änderungen dann bis zu CACHE_TTL
+      # brauchen, bis sie auf der Website erscheinen.
+      - 'CACHE_ENABLED=${CACHE_ENABLED:-false}'
+      - 'CACHE_STORE=redis'
+      - 'CACHE_TTL=${CACHE_TTL:-2m}'
+      - 'CACHE_AUTO_PURGE=${CACHE_AUTO_PURGE:-true}'
+    healthcheck:
+      test:
+        - CMD
+        - wget
+        - '-q'
+        - '--spider'
+        - 'http://127.0.0.1:8055/admin/login'
+      interval: 5s
+      timeout: 20s
+      retries: 10
+    depends_on:
+      postgresql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgresql:
+    image: 'postgis/postgis:16-3.4-alpine'
+    platform: linux/amd64
+    volumes:
+      - 'directus-postgresql-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=${SERVICE_USER_POSTGRESQL}'
+      - 'POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRESQL}'
+      - 'POSTGRES_DB=${POSTGRESQL_DATABASE:-directus}'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+  redis:
+    image: 'redis:7-alpine'
+    command: 'redis-server --appendonly yes'
+    volumes:
+      - 'directus-redis-data:/data'
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+  koweg:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # Diese Werte landen beim Build im Bundle - siehe Kommentar im Dockerfile.
+      # PUBLIC_DIRECTUS_URL muss die öffentliche Directus-Domain sein, nicht
+      # http://directus:8055: der Browser lädt darüber Bilder und Assets.
+      args:
+        PUBLIC_DIRECTUS_URL: '${PUBLIC_DIRECTUS_URL}'
+        PUBLIC_SITE_URL: '${PUBLIC_SITE_URL}'
+        PUBLIC_DIRECTUS_FORM_TOKEN: '${PUBLIC_DIRECTUS_FORM_TOKEN}'
+        PUBLIC_ENABLE_VISUAL_EDITING: '${PUBLIC_ENABLE_VISUAL_EDITING:-false}'
+        PUBLIC_FALLBACK_IMAGE_ID: '${PUBLIC_FALLBACK_IMAGE_ID}'
+        DRAFT_MODE_SECRET: '${DRAFT_MODE_SECRET}'
+    environment:
+      - SERVICE_URL_KOWEG_3000
+      - NODE_ENV=production
+      - HOST=0.0.0.0
+      - PORT=3000
+      - 'DRAFT_MODE_SECRET=${DRAFT_MODE_SECRET}'
+    depends_on:
+      directus:
+        condition: service_healthy
+
+  backup:
+    # Eigenes Repo (Desktop\directus-backup). Das Image muss vorher gebaut und
+    # erreichbar sein - drei Wege:
+    #   1. Registry:   ghcr.io/skeme-dev/directus-backup:latest hier eintragen
+    #   2. Coolify:    das Backup-Repo als eigene Application deployen und
+    #                  diesen Service hier weglassen
+    #   3. Auf dem Server: git clone + docker build -t directus-backup:latest .
+    image: 'directus-backup:latest'
+    restart: unless-stopped
+    volumes:
+      - 'directus-backups:/backups'
+      # Muss dasselbe Volume sein, das Directus als /directus/uploads mountet.
+      # Read-write, damit `restore --mode=uploads` funktioniert.
+      - 'directus-uploads:/directus-uploads'
+    environment:
+      # Intern erreichbar - der Backup-Container braucht keine öffentliche URL.
+      - 'DIRECTUS_URL=http://directus:8055'
+      - 'DIRECTUS_TOKEN=${BACKUP_DIRECTUS_TOKEN}'
+      - PG_ENABLED=true
+      - PGHOST=postgresql
+      - PGPORT=5432
+      - 'PGDATABASE=${POSTGRESQL_DATABASE:-directus}'
+      - PGUSER=$SERVICE_USER_POSTGRESQL
+      - PGPASSWORD=$SERVICE_PASSWORD_POSTGRESQL
+      - UPLOADS_PATH=/directus-uploads
+      - BACKUP_DIR=/backups
+      - 'BACKUP_CRON=${BACKUP_CRON:-0 3 * * *}'
+      - 'TZ=${TZ:-Europe/Berlin}'
+      - INCLUDE_SCHEMA=true
+      - INCLUDE_TEMPLATE=true
+      - RETENTION_DAILY=7
+      - RETENTION_WEEKLY=4
+      - RETENTION_MONTHLY=6
+      # Off-site-Kopie. Ohne das liegen die Backups auf derselben Maschine wie
+      # das, wovor sie schützen sollen.
+      - 'S3_ENABLED=${S3_ENABLED:-false}'
+      - 'S3_BUCKET=${S3_BUCKET:-}'
+      - 'S3_PREFIX=${S3_PREFIX:-directus-backups}'
+      - 'S3_ENDPOINT_URL=${S3_ENDPOINT_URL:-}'
+      - 'S3_ADDRESSING_STYLE=${S3_ADDRESSING_STYLE:-auto}'
+      - 'AWS_REGION=${AWS_REGION:-}'
+      - 'AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID:-}'
+      - 'AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY:-}'
+    depends_on:
+      directus:
+        condition: service_healthy
+
+volumes:
+  directus-uploads:
+  directus-extensions:
+  directus-templates:
+  directus-postgresql-data:
+  directus-redis-data:
+  directus-backups:
