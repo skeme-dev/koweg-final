@@ -1,19 +1,17 @@
+import { error } from '@sveltejs/kit';
 import { fetchEventsByTeam } from '$lib/directus/fetchers';
 import type { PageServerLoad } from './$types';
 
-export const load = (async (event) => {
-	const teamSlug = event.params.teamSlug;
+export const load = (async ({ params, parent, fetch }) => {
+	// Siehe Abteilungs-Loader: Layout-Daten über parent(), nicht über event.data.
+	const { teams } = await parent();
+	const team = (teams ?? []).find((t: any) => t.slug === params.teamSlug);
 
-	// Find the team ID from layout data
-	const teams = event.data?.teams ?? [];
-	const team = teams.find((t: any) => t.slug === teamSlug);
-
-	let teamEvents: any[] = [];
-	if (team?.id) {
-		teamEvents = await fetchEventsByTeam(team.id, event.fetch);
+	if (!team) {
+		error(404, 'Diese Mannschaft gibt es nicht.');
 	}
 
 	return {
-		teamEvents
+		teamEvents: await fetchEventsByTeam(team.id, fetch)
 	};
 }) satisfies PageServerLoad;
