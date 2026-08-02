@@ -24,7 +24,7 @@
 <footer role="contentinfo" aria-label="Fußzeile" class="bg-gray py-16 dark:bg-[var(--background-variant-color)]">
 	<Container class="text-foreground">
 		<div class="space-y-6">
-			<Headline headline="Unsere Sponsoren" />
+			<!-- <Headline headline="Unsere Sponsoren" /> -->
 			<!-- <SponsorCarousel items={logos} marquee speed={80} gap={24} pauseOnHover>
 				{#snippet item(value, i)}
 					<div
