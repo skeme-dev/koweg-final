@@ -788,7 +788,7 @@ collections:
       color: null
       display_template: null
       group: pages
-      hidden: true
+      hidden: false
       icon: null
       item_duplication_fields: null
       note: null
@@ -1311,30 +1311,6 @@ collections:
       versioning: false
     schema:
       name: teams
-  - collection: teams_directus_users
-    meta:
-      accountability: all
-      archive_app_filter: true
-      archive_field: null
-      archive_value: null
-      collapse: open
-      collection: teams_directus_users
-      color: null
-      display_template: null
-      group: null
-      hidden: true
-      icon: import_export
-      item_duplication_fields: null
-      note: null
-      preview_url: null
-      singleton: false
-      sort: null
-      sort_field: sort
-      translations: null
-      unarchive_value: null
-      versioning: false
-    schema:
-      name: teams_directus_users
   - collection: teams_trainings
     meta:
       accountability: all
@@ -11821,9 +11797,7 @@ fields:
       group: null
       hidden: true
       interface: select-dropdown-m2o
-      note: >-
-        Veraltet - ersetzt durch die M2M-Zuordnung. Wird nach der Umstellung
-        entfernt.
+      note: null
       options: null
       readonly: false
       required: false
@@ -11931,32 +11905,6 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
-  - collection: directus_users
-    field: teams
-    type: alias
-    meta:
-      collection: directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: teams
-      group: null
-      hidden: false
-      interface: list-m2m
-      note: Mannschaften, in denen diese Person taetig ist.
-      options:
-        enableSelect: true
-        template: '{{teams_id.title}}{{funktion}}'
-      readonly: false
-      required: false
-      searchable: true
-      sort: 6
-      special:
-        - m2m
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
   - collection: events
     field: id
     type: integer
@@ -22821,11 +22769,9 @@ fields:
       display_options: null
       field: members
       group: null
-      hidden: true
+      hidden: false
       interface: list-o2m
-      note: >-
-        Veraltet - ersetzt durch die M2M-Zuordnung. Wird nach der Umstellung
-        entfernt.
+      note: null
       options:
         sort: team_sort
       readonly: false
@@ -22920,238 +22866,6 @@ fields:
       validation: null
       validation_message: null
       width: full
-  - collection: teams
-    field: trainers
-    type: alias
-    meta:
-      collection: teams
-      conditions: null
-      display: null
-      display_options: null
-      field: trainers
-      group: null
-      hidden: false
-      interface: list-m2m
-      note: >-
-        Trainer und Verantwortliche. Eine Person kann in mehreren Mannschaften
-        stehen.
-      options:
-        enableSelect: true
-        template: >-
-          {{directus_users_id.first_name}}
-          {{directus_users_id.last_name}}{{funktion}}
-      readonly: false
-      required: false
-      searchable: true
-      sort: 18
-      special:
-        - m2m
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-  - collection: teams_directus_users
-    field: id
-    type: integer
-    meta:
-      collection: teams_directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: id
-      group: null
-      hidden: true
-      interface: input
-      note: null
-      options: null
-      readonly: true
-      required: false
-      searchable: true
-      sort: 1
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: id
-      table: teams_directus_users
-      data_type: integer
-      default_value: nextval('teams_directus_users_id_seq'::regclass)
-      max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
-      is_nullable: false
-      is_unique: true
-      is_indexed: false
-      is_primary_key: true
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: true
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: teams_directus_users
-    field: teams_id
-    type: uuid
-    meta:
-      collection: teams_directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: teams_id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 2
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: teams_id
-      table: teams_directus_users
-      data_type: uuid
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: teams
-      foreign_key_column: id
-  - collection: teams_directus_users
-    field: directus_users_id
-    type: uuid
-    meta:
-      collection: teams_directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: directus_users_id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 3
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: directus_users_id
-      table: teams_directus_users
-      data_type: uuid
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: directus_users
-      foreign_key_column: id
-  - collection: teams_directus_users
-    field: sort
-    type: integer
-    meta:
-      collection: teams_directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: sort
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 4
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: sort
-      table: teams_directus_users
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: 32
-      numeric_scale: 0
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: teams_directus_users
-    field: funktion
-    type: string
-    meta:
-      collection: teams_directus_users
-      conditions: null
-      display: null
-      display_options: null
-      field: funktion
-      group: null
-      hidden: false
-      interface: input
-      note: Funktion dieser Person in genau dieser Mannschaft.
-      options:
-        placeholder: z.B. Cheftrainer, Co-Trainer, Betreuer
-        trim: true
-      readonly: false
-      required: false
-      searchable: true
-      sort: 5
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: funktion
-      table: teams_directus_users
-      data_type: character varying
-      default_value: null
-      max_length: 255
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
   - collection: teams_trainings
     field: id
     type: integer
@@ -26777,48 +26491,6 @@ relations:
       constraint_name: teams_related_department_foreign
       on_update: NO ACTION
       on_delete: SET NULL
-  - collection: teams_directus_users
-    field: teams_id
-    related_collection: teams
-    meta:
-      junction_field: directus_users_id
-      many_collection: teams_directus_users
-      many_field: teams_id
-      one_allowed_collections: null
-      one_collection: teams
-      one_collection_field: null
-      one_deselect_action: delete
-      one_field: trainers
-      sort_field: sort
-    schema:
-      table: teams_directus_users
-      column: teams_id
-      foreign_key_table: teams
-      foreign_key_column: id
-      constraint_name: teams_directus_users_teams_id_foreign
-      on_update: NO ACTION
-      on_delete: CASCADE
-  - collection: teams_directus_users
-    field: directus_users_id
-    related_collection: directus_users
-    meta:
-      junction_field: teams_id
-      many_collection: teams_directus_users
-      many_field: directus_users_id
-      one_allowed_collections: null
-      one_collection: directus_users
-      one_collection_field: null
-      one_deselect_action: delete
-      one_field: teams
-      sort_field: null
-    schema:
-      table: teams_directus_users
-      column: directus_users_id
-      foreign_key_table: directus_users
-      foreign_key_column: id
-      constraint_name: teams_directus_users_directus_users_id_foreign
-      on_update: NO ACTION
-      on_delete: CASCADE
   - collection: teams_trainings
     field: trainings_id
     related_collection: trainings
