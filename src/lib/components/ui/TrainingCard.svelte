@@ -55,7 +55,7 @@
 
 	<div class="flex flex-1 flex-col gap-3 p-5">
 		{#if schedule.title}
-			<div class="text-sm font-semibold text-gray-dark">{schedule.title}</div>
+			<div class="hidden text-sm font-semibold text-gray-dark">{schedule.title}</div>
 		{/if}
 
 		<div class="flex items-center gap-2 text-gray-dark">
