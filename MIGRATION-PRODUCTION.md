@@ -120,6 +120,19 @@ STORAGE_S3_FORCE_PATH_STYLE=true
 `FORCE_PATH_STYLE=true`, weil Hetzner virtual-hosted-style nur für Presigned
 URLs vorsieht; Directus streamt die Dateien selbst und braucht das nicht.
 
+> **`PUBLIC_URL` ist keine Kür.** Directus baut daraus jede absolute URL. Fehlt
+> sie, gilt der Standardwert `/`, und sämtliche Links in System-Mails werden
+> relativ — `/admin/accept-invite?token=…` statt der vollen Adresse. Dasselbe
+> trifft das Logo in den Mails. Prüfen ohne Testversand:
+>
+> ```bash
+> curl -s -H "Authorization: Bearer <admin-token>" https://<domain>/server/specs/oas | grep -o '"url":"[^"]*"' | head -1
+> ```
+>
+> Erwartet die volle Adresse mit `https://`. Kommt der Hostname ohne Schema,
+> ist `PUBLIC_URL` nicht gesetzt — Directus fällt dann auf den Host-Header
+> zurück.
+
 Zwei Dinge, die im Compose fehlten und hier dazugehören:
 
 ```

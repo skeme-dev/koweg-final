@@ -113,6 +113,31 @@ Image zeigen lassen.
 > Nach dem Ausrollen muss Directus **neu starten**. LiquidJS liest die Dateien
 > beim Start ein; eine geänderte Datei allein bewirkt nichts.
 
+## Voraussetzung: PUBLIC_URL
+
+**Ohne `PUBLIC_URL` sind alle Links und das Logo in den Mails kaputt.** Directus
+baut daraus jede absolute URL. Der Standardwert ist `/` — dann entstehen
+relative Adressen wie `/admin/accept-invite?token=…` und `/assets/<id>`, die in
+einem Mail-Programm ins Leere zeigen.
+
+In Coolify als Environment Variable der Directus-Ressource:
+
+```
+PUBLIC_URL=https://cms.sv-koweg.de
+```
+
+Mit Schema, ohne Schrägstrich am Ende. Danach neu starten.
+
+Prüfen lässt es sich ohne Testmail über die OpenAPI-Spec:
+
+```sh
+curl -s -H "Authorization: Bearer <admin-token>" https://cms.sv-koweg.de/server/specs/oas | grep -o '"url":"[^"]*"' | head -1
+```
+
+Erwartet `"url":"https://cms.sv-koweg.de"`. Kommt der Hostname **ohne** Schema
+zurück, ist `PUBLIC_URL` nicht gesetzt: Directus fällt dann auf den Host-Header
+zurück, und genau das ist das Symptom.
+
 ## Voraussetzungen in den Projekt-Einstellungen
 
 Die Templates ziehen ihre Marke aus Settings → Project Settings. Stand
