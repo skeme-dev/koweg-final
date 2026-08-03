@@ -26,18 +26,29 @@ zu, nicht auf das von Directus.
 ## Ausrollen in Coolify
 
 Der Inhalt dieses Ordners muss im Container unter `/directus/templates` liegen.
-Zwei Wege:
 
-**A — Persistent Storage als Datei-Mount** (kein Rebuild nötig)
+> Unsere Directus-Instanz läuft als Coolify-**Service**, und die sind intern
+> compose-basiert. Bei compose-basierten Ressourcen ist *Persistent Storage* im
+> Dashboard **schreibgeschützt** — Volumes lassen sich dort nur ansehen, nicht
+> anlegen. Wer eins braucht, muss die Compose-Datei bearbeiten und neu laden.
 
-In der Directus-Ressource unter *Persistent Storage* für jede der vier Dateien
-einen Mount vom Typ *File* anlegen, Zielpfad `/directus/templates/<name>.liquid`,
-und den Inhalt hineinkopieren. Umständlich bei vier Dateien, dafür ohne eigenes
-Image.
+**A — Volume im Compose, dann per Terminal befüllen** (empfohlen)
 
-**A2 — über das Coolify-Terminal nachladen** (am schnellsten zum Ausprobieren)
+In Coolify die Compose-Datei des Directus-Service öffnen und dem Service ein
+Volume auf `/directus/templates` geben:
 
-Im Coolify-Terminal den **Directus-Container** auswählen, dann:
+```yaml
+services:
+  directus:
+    volumes:
+      - 'directus-templates:/directus/templates'
+
+volumes:
+  directus-templates:
+```
+
+Compose neu laden und deployen. Danach im Coolify-Terminal den
+**Directus-Container** auswählen und das Volume füllen:
 
 ```sh
 mkdir -p /directus/templates && cd /directus/templates
@@ -51,26 +62,33 @@ B=https://raw.githubusercontent.com/skeme-dev/koweg-final/master/directus-templa
 ls -l /directus/templates
 ```
 
-Erwartet: vier Dateien, `base.liquid` rund 9,7 KB.
+Erwartet: vier Dateien, `base.liquid` rund 9,7 KB. Dann Directus neu starten.
 
-> **Das überlebt keinen Redeploy.** In den Container geschriebene Dateien
+Weil die Dateien im Volume liegen und nicht im Container-Dateisystem, überleben
+sie Redeploys und Änderungen an den Environment Variables. Zum Aktualisieren
+später genügt derselbe `wget`-Befehl plus Neustart — kein Deploy nötig.
+
+> **Ohne das Volume ist es flüchtig.** In den Container geschriebene Dateien
 > bleiben bei einem *Neustart* erhalten, aber nicht, wenn Coolify den Container
 > *neu erstellt* — und das passiert bei jedem Deploy und bei jeder Änderung an
-> den Environment Variables. Für Dauerbetrieb vorher unter *Persistent Storage*
-> ein Volume auf `/directus/templates` legen und danach per Terminal befüllen,
-> oder gleich Weg B nehmen.
+> den Environment Variables. Dann verschickt Directus wieder kommentarlos die
+> englischen Standardmails. Zum reinen Ausprobieren ist der `wget` ohne Volume
+> in Ordnung, für Dauerbetrieb nicht.
 
 Läuft die Zweig-Version statt `master`, im Befehl oben den Branch-Namen
 tauschen.
 
-**B — eigenes Image** (sauberer, wenn sich die Templates öfter ändern)
+**B — eigenes Image** (unabhängig von Terminal und Volume)
 
 ```dockerfile
 FROM directus/directus:11.17.4
 COPY directus-templates/ /directus/templates/
 ```
 
-Damit sind die Templates versioniert und ein Deploy zieht sie mit.
+Damit zieht jeder Deploy den aktuellen Stand aus dem Repo mit, ohne manuellen
+Schritt. Setzt voraus, dass das Image irgendwo gebaut und aus einer Registry
+gezogen werden kann — im Compose des Service dann `image:` auf das eigene
+Image zeigen lassen.
 
 > Nach dem Ausrollen muss Directus **neu starten**. LiquidJS liest die Dateien
 > beim Start ein; eine geänderte Datei allein bewirkt nichts.
