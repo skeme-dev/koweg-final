@@ -35,6 +35,34 @@ einen Mount vom Typ *File* anlegen, Zielpfad `/directus/templates/<name>.liquid`
 und den Inhalt hineinkopieren. Umständlich bei vier Dateien, dafür ohne eigenes
 Image.
 
+**A2 — über das Coolify-Terminal nachladen** (am schnellsten zum Ausprobieren)
+
+Im Coolify-Terminal den **Directus-Container** auswählen, dann:
+
+```sh
+mkdir -p /directus/templates && cd /directus/templates
+```
+
+```sh
+B=https://raw.githubusercontent.com/skeme-dev/koweg-final/master/directus-templates; for f in base password-reset user-invitation user-registration; do wget -qO "$f.liquid" "$B/$f.liquid" && echo "ok $f"; done
+```
+
+```sh
+ls -l /directus/templates
+```
+
+Erwartet: vier Dateien, `base.liquid` rund 9,7 KB.
+
+> **Das überlebt keinen Redeploy.** In den Container geschriebene Dateien
+> bleiben bei einem *Neustart* erhalten, aber nicht, wenn Coolify den Container
+> *neu erstellt* — und das passiert bei jedem Deploy und bei jeder Änderung an
+> den Environment Variables. Für Dauerbetrieb vorher unter *Persistent Storage*
+> ein Volume auf `/directus/templates` legen und danach per Terminal befüllen,
+> oder gleich Weg B nehmen.
+
+Läuft die Zweig-Version statt `master`, im Befehl oben den Branch-Namen
+tauschen.
+
 **B — eigenes Image** (sauberer, wenn sich die Templates öfter ändern)
 
 ```dockerfile
