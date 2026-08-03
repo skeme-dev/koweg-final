@@ -9,6 +9,8 @@
 # automatisch durch seine Migrationen - ein Downgrade ist dann nicht mehr
 # vorgesehen. Zum Upgrade siehe UPGRADE-DIRECTUS.md.
 
+
+
 services:
   directus:
     image: 'directus/directus:11.17.4'
@@ -102,6 +104,7 @@ services:
       args:
         PUBLIC_DIRECTUS_URL: '${PUBLIC_DIRECTUS_URL}'
         PUBLIC_SITE_URL: '${PUBLIC_SITE_URL}'
+        PUBLIC_DIRECTUS_FORM_TOKEN: '${PUBLIC_DIRECTUS_FORM_TOKEN}'
         PUBLIC_ENABLE_VISUAL_EDITING: '${PUBLIC_ENABLE_VISUAL_EDITING:-false}'
         PUBLIC_FALLBACK_IMAGE_ID: '${PUBLIC_FALLBACK_IMAGE_ID}'
         DRAFT_MODE_SECRET: '${DRAFT_MODE_SECRET}'
@@ -111,11 +114,6 @@ services:
       - HOST=0.0.0.0
       - PORT=3000
       - 'DRAFT_MODE_SECRET=${DRAFT_MODE_SECRET}'
-      # Formular-Token: serverseitig, deshalb Laufzeit statt Build-Arg. Ändert
-      # er sich, genügt ein Neustart - kein neuer Build.
-      - 'DIRECTUS_FORM_TOKEN=${DIRECTUS_FORM_TOKEN}'
-      # Directus im selben Netz - spart den Umweg über den Reverse Proxy.
-      - 'DIRECTUS_INTERNAL_URL=http://directus:8055'
     depends_on:
       directus:
         condition: service_healthy

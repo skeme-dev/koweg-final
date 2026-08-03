@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { submitForm } from '$lib/directus/forms';
 	import type { FormField } from '$lib/types/directus-schema';
 	import { cn } from '$lib/utils';
 	import { CheckCircle } from '@lucide/svelte';
@@ -25,30 +26,14 @@
 	let isSubmitted = $state(false);
 	let error = $state<string | null>(null);
 
-	/**
-	 * Geht über den eigenen Server (/api/forms/submit), nicht direkt an
-	 * Directus: der Token bleibt dadurch serverseitig. Welche Felder gültig
-	 * sind, entscheidet der Server anhand der Formular-Definition.
-	 */
 	const handleSubmit = async (data: Record<string, any>) => {
 		try {
-			const payload = new FormData();
-			payload.append('form', form.id);
-
-			for (const [name, value] of Object.entries(data)) {
-				if (value === undefined || value === null) continue;
-				if (value instanceof File) {
-					payload.append(`file:${name}`, value);
-				} else {
-					payload.append(`value:${name}`, value.toString());
-				}
-			}
-
-			const response = await fetch('/api/forms/submit', { method: 'POST', body: payload });
-			if (!response.ok) {
-				const body = await response.json().catch(() => ({}));
-				throw new Error(body.message ?? 'Formular konnte nicht abgesendet werden.');
-			}
+			const fieldsWithNames = form.fields.map((field) => ({
+				id: field.id,
+				name: field.name || '',
+				type: field.type || ''
+			}));
+			await submitForm(form.id, fieldsWithNames, data);
 
 			if (form.on_success === 'redirect' && form.success_redirect_url) {
 				if (form.success_redirect_url.startsWith('/')) {
@@ -61,12 +46,7 @@
 			}
 		} catch (err) {
 			console.error('Error submitting form:', err);
-			// Der Server formuliert verwertbare Hinweise ("… ist erforderlich",
-			// "Datei ist größer als 5 MB") - die sind hilfreicher als ein pauschaler Satz.
-			error =
-				err instanceof Error && err.message
-					? err.message
-					: 'Formular konnte nicht abgesendet werden. Bitte versuche es später nochmal.';
+			error = 'Formular konnte nicht abgesendet werden. Bitte versuche es später nochmal.';
 		}
 	};
 </script>
