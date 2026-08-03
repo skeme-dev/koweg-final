@@ -1,0 +1,67 @@
+{% comment %}
+  E-Mail-Adresse bestaetigen nach einer Selbstregistrierung. Nur relevant, wenn
+  die oeffentliche Registrierung aktiviert ist (AUTH_..._ALLOW_PUBLIC_REGISTRATION
+  bzw. POST /users/register). Bei uns derzeit nicht im Einsatz - das Template
+  liegt hier, damit im Ernstfall keine englische Directus-Standardmail rausgeht.
+
+  Variablen: url (Bestaetigungslink), projectName, projectColor, projectUrl
+{% endcomment %}
+{% layout "base" %}
+
+{% block preheader %}
+  Bitte best&auml;tige deine E-Mail-Adresse.
+{% endblock %}
+
+{% block content %}
+
+<h1>E-Mail-Adresse best&auml;tigen</h1>
+
+<p>
+  Vielen Dank f&uuml;r deine Registrierung bei
+  <strong>{{ projectName }}</strong>. Es fehlt nur noch ein Schritt: Bitte
+  best&auml;tige, dass diese E-Mail-Adresse dir geh&ouml;rt.
+</p>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+  <tr>
+    <td align="center" bgcolor="{{ projectColor }}" style="background-color:{{ projectColor }}; border-radius:8px;">
+      <a
+        href="{{ url }}"
+        target="_blank"
+        rel="noopener"
+        style="
+          display:inline-block;
+          padding:13px 28px;
+          font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          font-size:16px;
+          font-weight:600;
+          line-height:20px;
+          color:#ffffff;
+          text-decoration:none;
+          border-radius:8px;
+        "
+      >
+        <!--[if mso]><i style="letter-spacing:28px; mso-font-width:-100%; mso-text-raise:26pt">&nbsp;</i><![endif]-->
+        <span style="mso-text-raise:13pt;">E-Mail-Adresse best&auml;tigen</span>
+        <!--[if mso]><i style="letter-spacing:28px; mso-font-width:-100%">&nbsp;</i><![endif]-->
+      </a>
+    </td>
+  </tr>
+</table>
+
+<div class="note">
+  Solange die Adresse nicht best&auml;tigt ist, bleibt das Konto inaktiv.
+</div>
+
+<p>
+  Hast du dich nicht registriert, ignoriere diese E-Mail bitte. Es wird dann
+  kein Konto eingerichtet.
+</p>
+
+<p class="fallback">
+  Falls die Schaltfl&auml;che nicht funktioniert, kopiere diese Adresse in
+  deine Browserleiste:<br />
+  <a href="{{ url }}" target="_blank" rel="noopener" style="color:{{ projectColor }};">{{ url }}</a>
+</p>
+
+{% endblock %}
