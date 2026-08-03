@@ -92,6 +92,46 @@ sein, nicht `http://directus:8055`: der Browser lädt darüber Bilder.
 > Diese beiden werden beim Build ins Frontend-Bundle gebacken. Ändern sie sich,
 > muss das Frontend **neu gebaut** werden — ein Neustart genügt nicht.
 
+### Der Form-Token beim ersten Deploy
+
+`PUBLIC_DIRECTUS_FORM_TOKEN` gehört zum Directus-User „Frontend Bot" — den es
+beim ersten Build noch nicht gibt. Und nachträglich auslesen geht nicht:
+Directus gibt einen gesetzten Token nie wieder heraus, die API antwortet mit
+`**********`.
+
+Deshalb den Token **selbst vorgeben** statt ihn generieren zu lassen:
+
+```bash
+openssl rand -hex 32
+```
+
+Den Wert vor dem ersten Build als `PUBLIC_DIRECTUS_FORM_TOKEN` in Coolify
+eintragen. Nach dem ersten Directus-Start dann:
+
+```bash
+python scripts/bootstrap-form-bot.py
+```
+
+Das Skript legt Upload-Ordner, Policy, Rechte und den Bot-User an und setzt
+genau diesen Token. Es ist idempotent — ein zweiter Lauf ändert nichts, außer
+dass der Token neu gesetzt wird. Vorher ansehen, was es täte:
+
+```bash
+python scripts/bootstrap-form-bot.py --check
+```
+
+> Formulare funktionieren aktuell **auch ohne Token**: die Policy
+> „Forms - Submission" ist zusätzlich öffentlich zugewiesen (ein `access`-Eintrag
+> ohne `user` und ohne `role`). Nachprüfbar — ein anonymer POST auf
+> `form_submissions` antwortet mit `400` (ungültige ID), nicht mit `403`,
+> während dieselbe Anfrage auf `posts` oder `teams` `403` liefert.
+>
+> Der Token ist trotzdem sinnvoll: er ist die Absicherung für den Fall, dass
+> die öffentliche Zuweisung später entfernt wird. Beachte aber, dass er im
+> Client-Bundle landet und damit für jeden Besucher lesbar ist — er darf
+> deshalb nie mehr können als Formulare einreichen. Die Rechte sind genau so
+> zugeschnitten: Upload nur bis 5 MB und nur in den Ordner „3. Uploads".
+
 ---
 
 ## Teil 2 — Erster Deploy

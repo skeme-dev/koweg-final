@@ -9,6 +9,8 @@
 # automatisch durch seine Migrationen - ein Downgrade ist dann nicht mehr
 # vorgesehen. Zum Upgrade siehe UPGRADE-DIRECTUS.md.
 
+
+
 services:
   directus:
     image: 'directus/directus:11.17.4'

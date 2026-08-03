@@ -1,8 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import ErrorPage from '$lib/components/layout/ErrorPage.svelte';
 </script>
 
-<div class="flex flex-col items-center justify-center">
-	<h1>{page.status}</h1>
-	<p>{page.error?.message}</p>
-</div>
+<ErrorPage />
