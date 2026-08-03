@@ -15,6 +15,14 @@
 	let post = $derived(data.post);
 	const author = $derived(data.author);
 	const authorName = $derived([author?.first_name, author?.last_name].filter(Boolean).join(' '));
+	// Fallback, wenn kein Avatar hinterlegt ist - sonst steht der Name allein
+	// und die Zeile wirkt angeschnitten.
+	const authorInitials = $derived(
+		[author?.first_name, author?.last_name]
+			.filter(Boolean)
+			.map((part) => part!.trim().charAt(0).toUpperCase())
+			.join('')
+	);
 	const postUrl = `${PUBLIC_SITE_URL}/blog/${page.params.slug}`;
 </script>
 
@@ -67,9 +75,9 @@
 		</main>
 
 		<aside class="h-fit w-full space-y-6 rounded-lg bg-background-muted p-6">
-			{#if author}
+			{#if author && (authorName || author.avatar)}
 				<div
-					class="flex items-center space-x-4"
+					class="flex items-center gap-4"
 					data-directus={setAttr({
 						collection: 'posts',
 						item: post.id,
@@ -80,27 +88,30 @@
 					{#if author.avatar}
 						<DirectusImage
 							uuid={author.avatar as string}
-							alt={authorName || 'author avatar'}
-							class="size-[48px] rounded-full object-cover"
+							alt={authorName || 'Autorenbild'}
+							class="size-12 shrink-0 rounded-full object-cover ring-2 ring-accent/20"
 							width={48}
 							height={48}
 						/>
+					{:else}
+						<span
+							aria-hidden="true"
+							class="flex size-12 shrink-0 items-center justify-center rounded-full bg-accent/10 font-heading text-lg font-bold text-accent ring-2 ring-accent/20"
+						>
+							{authorInitials}
+						</span>
 					{/if}
-					<div>
-						{#if authorName}
-							<p
-								class="font-bold"
-								data-directus={setAttr({
-									collection: 'posts',
-									item: post.id,
-									fields: ['author'],
-									mode: 'popover'
-								})}
-							>
+
+					{#if authorName}
+						<div class="min-w-0">
+							<p class="text-xs font-medium uppercase tracking-wider text-gray-dark">
+								Geschrieben von
+							</p>
+							<p class="truncate font-heading text-bold font-bold leading-tight">
 								{authorName}
 							</p>
-						{/if}
-					</div>
+						</div>
+					{/if}
 				</div>
 			{/if}
 
@@ -117,7 +128,7 @@
 				</p>
 			{/if}
 
-			<div class="flex justify-start">
+			<!-- <div class="flex justify-start">
 				<ShareDialog {postUrl} postTitle={post.title} />
 			</div>
 
@@ -145,7 +156,7 @@
 						</a>
 					{/each}
 				</div>
-			</div>
+			</div> -->
 		</aside>
 	</div>
 </Container>
