@@ -1,0 +1,71 @@
+{% comment %}
+  Einladung ins Backend. Ausgeloest ueber Settings -> Users -> Invite Users
+  oder POST /users/invite.
+
+  Variablen: url (Link zum Annehmen), projectName, projectColor, projectUrl
+{% endcomment %}
+{% layout "base" %}
+
+{% block preheader %}
+  Du wurdest zur Vereinsverwaltung von {{ projectName }} eingeladen.
+{% endblock %}
+
+{% block content %}
+
+<h1>Du wurdest eingeladen</h1>
+
+<p>
+  Du hast eine Einladung zur Vereinsverwaltung von
+  <strong>{{ projectName }}</strong> erhalten. Dort pflegen wir die Inhalte
+  unserer Website &ndash; Mannschaften, Termine, Beitr&auml;ge und Bilder.
+</p>
+
+<p>
+  Klicke auf die Schaltfl&auml;che, um die Einladung anzunehmen und dein
+  Passwort zu vergeben.
+</p>
+
+<table role="presentation" border="0" cellpadding="0" cellspacing="0" style="margin:24px 0;">
+  <tr>
+    <td align="center" bgcolor="{{ projectColor }}" style="background-color:{{ projectColor }}; border-radius:8px;">
+      <a
+        href="{{ url }}"
+        target="_blank"
+        rel="noopener"
+        style="
+          display:inline-block;
+          padding:13px 28px;
+          font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+          font-size:16px;
+          font-weight:600;
+          line-height:20px;
+          color:#ffffff;
+          text-decoration:none;
+          border-radius:8px;
+        "
+      >
+        <!--[if mso]><i style="letter-spacing:28px; mso-font-width:-100%; mso-text-raise:26pt">&nbsp;</i><![endif]-->
+        <span style="mso-text-raise:13pt;">Einladung annehmen</span>
+        <!--[if mso]><i style="letter-spacing:28px; mso-font-width:-100%">&nbsp;</i><![endif]-->
+      </a>
+    </td>
+  </tr>
+</table>
+
+<div class="note">
+  Du vergibst dabei selbst ein Passwort. Wir kennen es nicht und k&ouml;nnen es
+  auch nicht einsehen.
+</div>
+
+<p>
+  Erwartest du keine Einladung von uns, kannst du diese E-Mail einfach
+  ignorieren. Ohne den Link oben wird kein Zugang eingerichtet.
+</p>
+
+<p class="fallback">
+  Falls die Schaltfl&auml;che nicht funktioniert, kopiere diese Adresse in
+  deine Browserleiste:<br />
+  <a href="{{ url }}" target="_blank" rel="noopener" style="color:{{ projectColor }};">{{ url }}</a>
+</p>
+
+{% endblock %}
