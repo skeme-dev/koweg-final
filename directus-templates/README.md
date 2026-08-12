@@ -47,20 +47,29 @@ volumes:
   directus-templates:
 ```
 
-Compose neu laden und deployen. Danach im Coolify-Terminal den
-**Directus-Container** auswählen und das Volume füllen:
+Compose neu laden und deployen. Danach das Volume füllen — im Coolify-Terminal
+den **Server** auswählen, nicht den Container:
 
 ```sh
-mkdir -p /directus/templates && cd /directus/templates
+docker ps --format '{{.Names}}' | grep -i directus
 ```
 
 ```sh
-B=https://raw.githubusercontent.com/skeme-dev/koweg-final/master/directus-templates; for f in base password-reset user-invitation user-registration; do wget -qO "$f.liquid" "$B/$f.liquid" && echo "ok $f"; done
+docker exec -u 0 "$(docker ps --format '{{.Names}}' | grep -i directus | head -1)" sh -c 'mkdir -p /directus/templates && cd /directus/templates && B=https://raw.githubusercontent.com/skeme-dev/koweg-final/master/directus-templates; for f in base password-reset user-invitation user-registration; do wget -qO "$f.liquid" "$B/$f.liquid" && echo "ok $f"; done; ls -l'
 ```
 
-```sh
-ls -l /directus/templates
-```
+> **Warum `-u 0` und warum vom Server aus.** Das Image setzt `USER node`, ein
+> frisch angelegtes Volume gehört aber `root`. Im Container-Terminal scheitert
+> `wget` deshalb mit „can't open: Permission denied". `docker exec -u 0`
+> schreibt als root hinein.
+>
+> Ein `chown` ist danach **nicht** nötig: Directus liest die Templates nur, und
+> die Dateien sind mit 644 für `node` lesbar. Root-Besitz ist sogar die
+> sinnvollere Variante — so kann der Anwendungsprozess seine eigenen Templates
+> nicht überschreiben.
+
+Findet `grep -i directus` mehrere Container (etwa die Datenbank), den richtigen
+Namen aus der ersten Ausgabe nehmen und statt der Ersetzung einsetzen.
 
 Erwartet: vier Dateien, `base.liquid` rund 9,7 KB. Dann Directus neu starten.
 
@@ -78,6 +87,17 @@ später genügt derselbe `wget`-Befehl plus Neustart — kein Deploy nötig.
 Läuft die Zweig-Version statt `master`, im Befehl oben den Branch-Namen
 tauschen.
 
+Bietet dein Coolify keinen Server-Terminal-Zugang, geht es auch direkt über den
+Ablageort des Volumes auf dem Host:
+
+```sh
+docker volume ls | grep -i template
+```
+
+```sh
+cd "$(docker volume inspect <volume-name> --format '{{.Mountpoint}}')" && B=https://raw.githubusercontent.com/skeme-dev/koweg-final/master/directus-templates; for f in base password-reset user-invitation user-registration; do wget -qO "$f.liquid" "$B/$f.liquid" && echo "ok $f"; done; ls -l
+```
+
 **B — eigenes Image** (unabhängig von Terminal und Volume)
 
 ```dockerfile
@@ -92,6 +112,31 @@ Image zeigen lassen.
 
 > Nach dem Ausrollen muss Directus **neu starten**. LiquidJS liest die Dateien
 > beim Start ein; eine geänderte Datei allein bewirkt nichts.
+
+## Voraussetzung: PUBLIC_URL
+
+**Ohne `PUBLIC_URL` sind alle Links und das Logo in den Mails kaputt.** Directus
+baut daraus jede absolute URL. Der Standardwert ist `/` — dann entstehen
+relative Adressen wie `/admin/accept-invite?token=…` und `/assets/<id>`, die in
+einem Mail-Programm ins Leere zeigen.
+
+In Coolify als Environment Variable der Directus-Ressource:
+
+```
+PUBLIC_URL=https://cms.sv-koweg.de
+```
+
+Mit Schema, ohne Schrägstrich am Ende. Danach neu starten.
+
+Prüfen lässt es sich ohne Testmail über die OpenAPI-Spec:
+
+```sh
+curl -s -H "Authorization: Bearer <admin-token>" https://cms.sv-koweg.de/server/specs/oas | grep -o '"url":"[^"]*"' | head -1
+```
+
+Erwartet `"url":"https://cms.sv-koweg.de"`. Kommt der Hostname **ohne** Schema
+zurück, ist `PUBLIC_URL` nicht gesetzt: Directus fällt dann auf den Host-Header
+zurück, und genau das ist das Symptom.
 
 ## Voraussetzungen in den Projekt-Einstellungen
 

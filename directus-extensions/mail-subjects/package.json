@@ -1,0 +1,13 @@
+{
+  "name": "directus-extension-mail-subjects",
+  "description": "Deutsche Betreffzeilen fuer die System-Mails von Directus",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "directus:extension": {
+    "type": "hook",
+    "path": "index.js",
+    "source": "index.js",
+    "host": "^11.0.0"
+  }
+}
