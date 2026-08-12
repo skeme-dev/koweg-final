@@ -1,62 +1,50 @@
-import { useDirectus } from './directus';
-import { PUBLIC_DIRECTUS_FORM_TOKEN } from '$env/static/public';
-interface SubmissionValue {
-	field: string;
-	value?: string;
-	file?: string;
+import { BOT_FORM_FIELD, BOT_TOKEN_FIELD, HONEYPOT_FIELD_NAME } from '$lib/forms/constants';
+
+export interface SubmitMeta {
+	/** Signiertes Zeit-Token vom /api/forms/token-Endpoint. */
+	token: string;
+	/** Wert des Honeypot-Felds (bei echten Nutzern leer). */
+	honeypot?: string;
 }
 
+/**
+ * Sendet ein Formular an den eigenen Server-Endpoint (nicht mehr direkt an
+ * Directus). Der Endpoint prüft Honeypot, Timing und Rate-Limit und schreibt
+ * dann mit einem privaten Token nach Directus.
+ */
 export const submitForm = async (
 	formId: string,
 	fields: { id: string; name: string; type: string }[],
-	data: Record<string, any>
+	data: Record<string, any>,
+	meta: SubmitMeta
 ) => {
-	const { getDirectus, uploadFiles, createItem, withToken } = useDirectus();
-	const TOKEN = PUBLIC_DIRECTUS_FORM_TOKEN;
-	const directus = getDirectus(fetch);
+	const body = new FormData();
+	body.append(BOT_FORM_FIELD, formId);
+	body.append(BOT_TOKEN_FIELD, meta.token ?? '');
+	body.append(HONEYPOT_FIELD_NAME, meta.honeypot ?? '');
 
-	if (!TOKEN) {
-		throw new Error('DIRECTUS_FORM_TOKEN is not defined. Check your .env file.');
+	for (const field of fields) {
+		const value = data[field.name];
+		if (value === undefined || value === null) continue;
+
+		if (field.type === 'file' && value instanceof File) {
+			body.append(field.name, value);
+		} else if (Array.isArray(value)) {
+			body.append(field.name, value.join(', '));
+		} else {
+			body.append(field.name, String(value));
+		}
 	}
 
-	try {
-		const submissionValues: SubmissionValue[] = [];
-
-		for (const field of fields) {
-			const value = data[field.name];
-
-			if (value === undefined || value === null) continue;
-
-			if (field.type === 'file' && value instanceof File) {
-				const formData = new FormData();
-				formData.append('file', value);
-
-				const uploadedFile = await directus.request(withToken(TOKEN, uploadFiles(formData)));
-
-				if (uploadedFile && 'id' in uploadedFile) {
-					submissionValues.push({
-						field: field.id,
-						file: uploadedFile.id
-					});
-				}
-			} else {
-				submissionValues.push({
-					field: field.id,
-					value: value.toString()
-				});
-			}
+	const res = await fetch('/api/forms/submit', { method: 'POST', body });
+	if (!res.ok) {
+		let message = 'Failed to submit form';
+		try {
+			const data = await res.json();
+			if (data?.message) message = data.message;
+		} catch {
+			// keine JSON-Antwort – Standardmeldung behalten
 		}
-
-		const payload = {
-			form: formId,
-			values: submissionValues
-		};
-
-
-
-		await directus.request(withToken(TOKEN, createItem('form_submissions', payload)));
-	} catch (error) {
-		console.error('Error submitting form:', error);
-		throw new Error('Failed to submit form');
+		throw new Error(message);
 	}
 };

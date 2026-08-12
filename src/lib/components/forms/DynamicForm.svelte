@@ -9,10 +9,12 @@
 	import SuperDebug from 'sveltekit-superforms';
 
 	import { zodClient, zod } from 'sveltekit-superforms/adapters';
+	import { onMount } from 'svelte';
+	import { HONEYPOT_FIELD_NAME } from '$lib/forms/constants';
 
 	interface DynamicFormProps {
 		fields: FormFieldType[];
-		onSubmit: (data: Record<string, any>) => void;
+		onSubmit: (data: Record<string, any>, meta: { token: string; honeypot: string }) => void;
 		submitLabel: string;
 		id: string;
 	}
@@ -49,14 +51,30 @@
 
 	const { enhance, submit, form: formData, errors, validateForm } = $derived(form);
 
-	const onsubmit = async (e: Event) => {
+	let token = $state('');
+
+	onMount(() => {
+		fetch('/api/forms/token')
+			.then((res) => (res.ok ? res.json() : null))
+			.then((data) => {
+				if (data?.token) token = data.token;
+			})
+			.catch(() => {
+				// Token bleibt leer -> Server lehnt ab, Nutzer laedt neu
+			});
+	});
+
+	const onsubmit = async (e: SubmitEvent) => {
 		e.preventDefault();
-		// const f = await superValidate($formData, zod(formSchema));
 		const f = await validateForm();
 		$errors = f.errors;
-		if (f.valid) {
-			onSubmit($formData);
-		}
+		if (!f.valid) return;
+
+		const formEl = e.currentTarget as HTMLFormElement;
+		const honeypot =
+			(formEl.elements.namedItem(HONEYPOT_FIELD_NAME) as HTMLInputElement | null)?.value ?? '';
+
+		onSubmit($formData, { token, honeypot });
 	};
 </script>
 
@@ -70,6 +88,14 @@
 		mode: 'popover'
 	})}
 >
+	<!-- Honeypot: fuer Menschen unsichtbar, von Bots gern ausgefuellt -->
+	<div class="absolute left-[-9999px] top-[-9999px] h-px w-px overflow-hidden" aria-hidden="true">
+		<label>
+			Website
+			<input type="text" name={HONEYPOT_FIELD_NAME} tabindex="-1" autocomplete="off" />
+		</label>
+	</div>
+
 	{#each sortedFields as field (field.id)}
 		<Field {field} {form} />
 	{/each}

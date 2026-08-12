@@ -26,14 +26,14 @@
 	let isSubmitted = $state(false);
 	let error = $state<string | null>(null);
 
-	const handleSubmit = async (data: Record<string, any>) => {
+	const handleSubmit = async (data: Record<string, any>, meta: { token: string; honeypot: string }) => {
 		try {
 			const fieldsWithNames = form.fields.map((field) => ({
 				id: field.id,
 				name: field.name || '',
 				type: field.type || ''
 			}));
-			await submitForm(form.id, fieldsWithNames, data);
+			await submitForm(form.id, fieldsWithNames, data, meta);
 
 			if (form.on_success === 'redirect' && form.success_redirect_url) {
 				if (form.success_redirect_url.startsWith('/')) {

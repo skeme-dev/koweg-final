@@ -23,7 +23,6 @@
 			.map((part) => part!.trim().charAt(0).toUpperCase())
 			.join('')
 	);
-	const postUrl = `${PUBLIC_SITE_URL}/blog/${page.params.slug}`;
 </script>
 
 <Container class="py-12">
